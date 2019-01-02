@@ -1,0 +1,20 @@
+swagger: 3.1
+info:
+  title: Swagger Slack Channel
+  description: Slack Channel POJOs specification
+  version: v1
+
+definitions:
+  SlackChannelV1Action:
+    type: string
+    description: Possible actions for Slack Channel V1 connector.
+    enum:
+      - SendText
+
+  # Send text
+  SlackChannelV2SendTextPayload:
+    type: object
+    properties:
+      message:
+        type: string
+        description: A plain text to be sent.

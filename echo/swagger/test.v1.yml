@@ -1,0 +1,45 @@
+swagger: 3.1
+info:
+  title: Swagger Echo Test
+  description: Echo Test POJOs specification
+  version: v1
+
+definitions:
+  EchoTestV1Action:
+    type: string
+    description: Possible actions for Echo Test V1 connector.
+    enum:
+    - Ping
+    - Send
+
+  # Ping
+  EchoTestV1PingParameters:
+    type: object
+    properties:
+      throwException:
+        type: boolean
+        description: Throw integration exception if true.
+        default: false
+
+  # Send
+  EchoTestV1SendParameters:
+    type: object
+    properties:
+      throwException:
+        type: boolean
+        description: Throw integration exception if true.
+        default: false
+
+  EchoTestV1SendPayload:
+    type: object
+    properties:
+      message:
+        type: string
+        description: A message to be sent back.
+
+  EchoTestV1SendResult:
+    type: object
+    properties:
+      message:
+        type: string
+        description: Echo of sent message.

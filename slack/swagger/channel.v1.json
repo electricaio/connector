@@ -1,0 +1,7 @@
+{
+  "dateLibrary": "java8",
+  "hideGenerationTimestamp": true,
+  "modelPackage": "io.electrica.integration.slack.channel.v1.model",
+  "invokerPackage": "io.electrica.integration",
+  "useBeanValidation": false
+}
