@@ -36,7 +36,7 @@
     </Match>
 
     <Match>
-        <Class name="io.electrica.integration.spi.Validations"/>
+        <Class name="io.electrica.connector.spi.Validations"/>
         <Method name="required"/>
         <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
     </Match>
