@@ -1,12 +1,9 @@
 language: java
-
 jdk:
   - openjdk8
 
-before_script:
-  - psql -c 'create database user_db encoding=UTF8;' -U postgres
-  - psql -c 'create database connector_hub_db encoding=UTF8;' -U postgres
-  - psql -c 'create database webhook_db encoding=UTF8;' -U postgres
+before_install:
+  - openssl aes-256-cbc -K $encrypted_585c2d4ca350_key -iv $encrypted_585c2d4ca350_iv -in private.der.enc -out private.der -d
 
 after_success:
   - ./gradlew jacocoTestReport coveralls
@@ -14,4 +11,4 @@ after_success:
 env:
   global:
     # COVERALLS_REPO_TOKEN
-    - secure: "iOKVVO5aspSz2TjXMiUs3QFxSYt6imyeFz7h+kYJiqKS4byWELJJ90aWNtYR9kLy0WjR43ua8VVmn7KPJO5QA4d5UzEOse9P6jesebsljT4+25onD2La8JJO0m8XvZJb44wV/SgngEf/4t0jVfCIk8nt2IuqgmUNh5HAqYjoQUvnP738RvcaI+DW9pdyWFuytNKUeN3beE9kWXUQBeoat7npByh7eg5NmE8Ibn8RQFiqc5cHOlOMPWxY+XB5eXvuXskGt545nmKroL1We7VyF3VphPaZkXNRQvXmj8kJrc1UYX6okVUZi4PhfhdLciD4ZLZu9ohZN/H3Gi6tnnqp4UID3IccgPTkMV3MHrXHRYHIif5hwJN5pGtTpshAQRVDiR0yFgO/uloHOuLIUTLOB7FGvrHsLK7JhZQ9TxjbAX+Kwn75Gav05bcee6ogArGHyuo/72iXgw+Onzj3tQ5ytRZQ8pvGapKXSZlITJAbCLyvPM31AfRPgfRvvMMaKYAJ6KRCgjDaZz2g1FEAVdY7U0zhYCUsNOcMZ/PISaVw4Q9EB6Z2bsQUqGBPUVSQVIWeoPUhIzjI6PTzt7Gx9cQmTGsD0suBZZZG4LkM9KNzvKoEG8WEG6C+m+wddCROE2Mi3kK18CkDB/M57SyLcY36Gsh3knI8/Gpi0IRIVS/7hrc="
+    secure: VxKH0LZljHph5dOqrsQVzfz5adLGgORDfKvTJHO4CWNviK0FhZYyDgnsBO0HOoOf8qxkfZj/VOR3bcbfyjtWGOhfd+Lv2ezcNUvArRBqf+nFs5xEF8x6m35SKWUF1o88LXI/TQm2jryB7uO1092ZdZgLcEgzGaua8qrZFzSm1mY+8jAF40yEMiEnQ225is+OrtvZOBwSox/Ls/YFEQsR+273+haDFRr+lWFNEFPLgSPV4v1YDkVw4x1mg4UydVIKN7Ya9+v0+msyA546MNzsXOgHyEU9siHX7qs6SuRcTG9X2A1FbAMo2KcUW/20d8IZxEZJc45MnfzJe3EtwVcwn9eqwzivUwAuUrbfUq63A+RgX6tOkjkhEt5W6M7Es3R13gdwRInAeBlF0DKgruzhOOZ787r7SpMEeGgmkKj8T7eoBlcFMMduKEUzF3GKBgLX4/qAxFmQixkNWx1e0MyRuZe1pzzExDQpxnwK9IebcZ8gmuYGZB8AWGkCSdGoyMa78tGKgvVBaGO55a2+r94SS2re5m7NJDIZFDKuumQHqt2KQEkbJJi/N0xO2F2m5Qt89Ia9bx4+DWevWOKDGNiR1Evd3XJEo7WH2BnNnyTNJF4EwMEogH0KoAb+UMpl/+ytQkaB7RzRKXaly+N3UmYmu9oWUNpYTK0ZtjNlQThwe/Q=

@@ -2,7 +2,7 @@ import jp.classmethod.aws.gradle.s3.AmazonS3FileUploadTask
 
 plugins {
     id 'com.github.kt3k.coveralls' version '2.8.2'
-    id 'org.hidetake.swagger.generator' version '2.15.0' apply false
+    id 'org.hidetake.swagger.generator' version '2.16.0' apply false
     id 'jp.classmethod.aws' version '0.38' apply false
 }
 
@@ -37,6 +37,8 @@ subprojects {
         lombok = '1.18.4'
         mockito = '2.23.0'
         jupiter = '5.3.2'
+        swaggerAnnotations = '1.5.17'
+        swaggerCodegenCli = '2.4.0'
     }
 
     def moduleName = it.name
@@ -66,37 +68,105 @@ subprojects {
 
             dependencies {
                 compile project(':spi')
-                compile 'io.swagger:swagger-annotations:1.5.17'
+                compile "io.swagger:swagger-annotations:$swaggerAnnotations"
 
                 testCompile project(':it-test')
 
-                swaggerCodegen 'io.swagger:swagger-codegen-cli:2.3.1'
+                swaggerCodegen "io.swagger:swagger-codegen-cli:$swaggerCodegenCli"
             }
 
-            // Upload Swagger files to S3 after `publish` task
-            publish {
-                doLast {
-                    tasks.uploadContent.execute()
-                }
-            }
+            swaggerSources {}
+
+            // Create dynamic SwaggerCode and S3 upload tasks for all connectors in `swagger` dir
+            def swaggerCodeOutputDir = "$buildDir/swagger-code"
+            def swaggerCodeDocOutputDir = "$buildDir/swagger-doc"
             fileTree("./swagger").visit { FileVisitDetails details ->
                 def fileName = details.name
                 if (fileName.endsWith('.yml')) {
-                    File swaggerFile = file("$moduleName/swagger/$fileName")
-                    task uploadContent(type: AmazonS3FileUploadTask) {
+                    File swaggerFile = details.file
+                    def filePath = swaggerFile.absolutePath
+                    def configFilePath = filePath.substring(0, filePath.length() - '.yml'.length()) + '.json'
+                    def configurationName = '_' + fileName.substring(0, fileName.length() - '.yml'.length()).toUpperCase()
+
+                    // Create task for Swagger code generation
+                    swaggerSources.configure {
+                        "$configurationName" {
+                            inputFile = swaggerFile
+                            code {
+                                language = 'spring'
+                                configFile = file(configFilePath)
+                                outputDir = file(swaggerCodeOutputDir)
+                                components = ['models']
+                                wipeOutputDir = false
+                            }
+                        }
+                    }
+
+                    // Hack to generate Markdown model documentation
+                    swaggerSources.configure {
+                        "${configurationName}_DOC" {
+                            inputFile = swaggerFile
+                            code {
+                                language = 'java'
+                                outputDir = file(swaggerCodeDocOutputDir)
+                                components = ['models']
+                                wipeOutputDir = false
+                            }
+                        }
+                    }
+
+                    /**
+                     * Create task to upload Connector swagger file to S3
+                     */
+                    task "uploadSwaggerFile$configurationName"(type: AmazonS3FileUploadTask) {
                         file swaggerFile
                         bucketName System.env.AWS_S3_CONNECTOR_ARTIFACT_BUCKET_NAME
-                        key "$moduleName/$moduleVersion/$fileName"
+                        key "$moduleName/swagger/$fileName"
                     }
                 }
             }
-        }
 
-        sourceSets {
-            main {
-                java { srcDir 'src/main/java' }
-                resources { srcDir 'src/main/resources' }
+            /**
+             * Create Swagger documentation Markdown files S3 upload tasks
+             */
+            task createUploadSwaggerDocTasks {
+                doLast {
+                    fileTree(swaggerCodeDocOutputDir + '/docs').visit { FileVisitDetails details ->
+                        def fileName = details.name
+                        task "uploadSwaggerDoc_$fileName"(type: AmazonS3FileUploadTask) {
+                            file details.file
+                            bucketName System.env.AWS_S3_CONNECTOR_ARTIFACT_BUCKET_NAME
+                            key "$moduleName/doc/$fileName"
+                        }
+                    }
+                }
             }
+
+            /**
+             * Upload Swagger files and documentation to S3 before `publish` task
+             */
+            task uploadArtifactsToS3(dependsOn: createUploadSwaggerDocTasks) {
+                doLast {
+                    tasks.findAll {
+                        it.name.startsWith('uploadSwaggerFile') || it.name.startsWith('uploadSwaggerDoc')
+                    }.forEach {
+                        it.execute()
+                    }
+                }
+            }
+
+            // To include generated classes in classpath.
+            compileJava.dependsOn generateSwaggerCode
+            publish.dependsOn uploadArtifactsToS3
+
+            // Extend `src` dirs with Swagger generated files
+            sourceSets {
+                main {
+                    java { srcDirs('src/main/java', "$swaggerCodeOutputDir/src/main/java") }
+                    resources { srcDir 'src/main/resources' }
+                }
+            }
+
         }
 
         task sourceJar(type: Jar) {

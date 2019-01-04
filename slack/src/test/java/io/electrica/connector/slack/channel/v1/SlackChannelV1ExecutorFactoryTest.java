@@ -1,7 +1,7 @@
 package io.electrica.connector.slack.channel.v1;
 
 import io.electrica.connector.slack.channel.v1.model.SlackChannelV1Action;
-import io.electrica.connector.slack.channel.v1.model.SlackChannelV2SendTextPayload;
+import io.electrica.connector.slack.channel.v1.model.SlackChannelV1SendTextPayload;
 import io.electrica.connector.spi.ServiceFacade;
 import io.electrica.connector.spi.Validations;
 import io.electrica.connector.spi.exception.ExceptionCodes;
@@ -41,7 +41,7 @@ class SlackChannelV1ExecutorFactoryTest {
     void testUnsupportedActionThrowException() {
         InvocationContext context = InvocationContext.builder("unsupported-action")
                 .authorization(SecuredAuthorizations.token(TEST_CHANNEL_TOKEN))
-                .payload(new SlackChannelV2SendTextPayload().message("Integration test message"))
+                .payload(new SlackChannelV1SendTextPayload().message("Integration test message"))
                 .build();
         IntegrationException e = assertThrows(IntegrationException.class, () -> emulator.runIntegration(context));
         assertEquals(ExceptionCodes.VALIDATION, e.getCode());
@@ -51,7 +51,7 @@ class SlackChannelV1ExecutorFactoryTest {
     void testSendText() throws IntegrationException {
         InvocationContext context = InvocationContext.builder(SlackChannelV1Action.SENDTEXT)
                 .authorization(SecuredAuthorizations.token(TEST_CHANNEL_TOKEN))
-                .payload(new SlackChannelV2SendTextPayload().message("Integration test message"))
+                .payload(new SlackChannelV1SendTextPayload().message("Integration test message"))
                 .build();
         Object result = emulator.runIntegration(context);
         assertNull(result);
@@ -72,7 +72,7 @@ class SlackChannelV1ExecutorFactoryTest {
     void testSendTextMissedPayloadMessageThrowException() {
         InvocationContext context = InvocationContext.builder(SlackChannelV1Action.SENDTEXT)
                 .authorization(SecuredAuthorizations.token(TEST_CHANNEL_TOKEN))
-                .payload(new SlackChannelV2SendTextPayload())
+                .payload(new SlackChannelV1SendTextPayload())
                 .build();
 
         IntegrationException e = assertThrows(IntegrationException.class, () -> emulator.runIntegration(context));
@@ -83,7 +83,7 @@ class SlackChannelV1ExecutorFactoryTest {
     @Test
     void testSendTextMissedAuthorizationThrowException() {
         InvocationContext context = InvocationContext.builder(SlackChannelV1Action.SENDTEXT)
-                .payload(new SlackChannelV2SendTextPayload().message("Integration test message"))
+                .payload(new SlackChannelV1SendTextPayload().message("Integration test message"))
                 .build();
 
         IntegrationException e = assertThrows(IntegrationException.class, () -> emulator.runIntegration(context));

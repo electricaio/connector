@@ -1,18 +1,1 @@
 version = "$slack"
-
-swaggerSources {
-    channelV1 {
-        inputFile = file('./swagger/channel.v1.yml')
-        code {
-            language = 'spring'
-            configFile = file('./swagger/channel.v1.json')
-            components = ['models']
-        }
-    }
-}
-
-// To include generated classes in classpath.
-compileJava.dependsOn swaggerSources.channelV1.code
-
-sourceSets.main.java.srcDir "${swaggerSources.channelV1.code.outputDir}/src/main/java"
-sourceSets.main.resources.srcDir "${swaggerSources.channelV1.code.outputDir}/src/main/resources"
