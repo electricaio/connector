@@ -12,7 +12,7 @@ definitions:
       - SendText
 
   # Send text
-  SlackChannelV2SendTextPayload:
+  SlackChannelV1SendTextPayload:
     type: object
     properties:
       message:

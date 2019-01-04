@@ -1,6 +1,6 @@
 package io.electrica.connector.slack.channel.v1;
 
-import io.electrica.connector.slack.channel.v1.model.SlackChannelV2SendTextPayload;
+import io.electrica.connector.slack.channel.v1.model.SlackChannelV1SendTextPayload;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ServiceFacade;
 import io.electrica.connector.spi.exception.Exceptions;
@@ -17,7 +17,7 @@ public class SlackChannelV1SendTextExecutor implements ConnectorExecutor {
     private final OkHttpClient httpClient;
 
     private final String url;
-    private final SlackChannelV2SendTextPayload payload;
+    private final SlackChannelV1SendTextPayload payload;
 
     SlackChannelV1SendTextExecutor(
             OkHttpClient httpClient,
@@ -26,7 +26,7 @@ public class SlackChannelV1SendTextExecutor implements ConnectorExecutor {
     ) throws IntegrationException {
         this.httpClient = httpClient;
         url = String.format(urlTemplate, facade.getTokenAuthorization().getToken());
-        payload = facade.readPayload(SlackChannelV2SendTextPayload.class);
+        payload = facade.readPayload(SlackChannelV1SendTextPayload.class);
     }
 
     @Nullable
