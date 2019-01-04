@@ -1,0 +1,2 @@
+[![Build Status](https://travis-ci.com/electricaio/connector.svg?token=z1JRjGpmpeeKYqo3ypqF&branch=master)](https://travis-ci.com/electricaio/connector)
+[![Coverage Status](https://coveralls.io/repos/github/electricaio/connector/badge.svg?branch=master&t=vX25Nu)](https://coveralls.io/github/electricaio/connector?branch=master)
