@@ -2,6 +2,10 @@ language: java
 jdk:
   - openjdk8
 
+branches:
+  only:
+    - master
+
 before_install:
   - openssl aes-256-cbc -K $encrypted_585c2d4ca350_key -iv $encrypted_585c2d4ca350_iv -in private.der.enc -out private.der -d
 
