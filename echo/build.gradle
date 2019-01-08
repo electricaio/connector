@@ -1,1 +1,5 @@
 version = "$echo"
+
+dependencies {
+    compile "com.squareup.okhttp3:okhttp:$okhttp"
+}
