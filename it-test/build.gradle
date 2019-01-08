@@ -2,6 +2,8 @@ version = "$itTest"
 
 dependencies {
     compile project(':spi')
+    compile "org.apache.commons:commons-io:$commonsIo"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind"
 
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'ch.qos.logback:logback-classic:1.0.13'

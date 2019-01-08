@@ -42,7 +42,7 @@ publishing {
                         if (version == null) {
                             throw new IllegalArgumentException("Unknown version for module: ${moduleName}")
                         }
-                        properties.appendNode("electrica-integration-${moduleName}.version", version)
+                        properties.appendNode("electrica-connector-${moduleName}.version", version)
                     }
                 }
                 def dependencyManagement = asNode().appendNode('dependencyManagement')
@@ -53,7 +53,7 @@ publishing {
                         Node dependency = dependencies.appendNode('dependency')
                         dependency.appendNode('groupId').value = it.group
                         dependency.appendNode('artifactId').value = moduleName
-                        dependency.appendNode('version').value = "\${electrica-integration-${moduleName}.version}"
+                        dependency.appendNode('version').value = "\${electrica-connector-${moduleName}.version}"
                     }
                 }
             }
