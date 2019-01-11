@@ -10,6 +10,7 @@ definitions:
     description: Possible actions for Slack Channel V1 connector.
     enum:
       - SendText
+      - SendAttachment
 
   # Send text
   SlackChannelV1SendTextPayload:

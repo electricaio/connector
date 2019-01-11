@@ -53,6 +53,8 @@ public class SlackChannelV1ExecutorFactory implements ConnectorExecutorFactory {
         switch (action) {
             case SENDTEXT:
                 return new SlackChannelV1SendTextExecutor(httpClient, urlTemplate, facade);
+            case SENDATTACHMENT:
+                return new SlackChannelV1SendAttachmentExecutor(httpClient, urlTemplate, facade);
             default:
                 throw Exceptions.validation("Unsupported action: " + action);
         }
