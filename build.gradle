@@ -33,6 +33,7 @@ subprojects {
 
         slack = '0.0.1'
         echo = '0.0.1'
+        hackerrank = '0.0.1'
 
         lombok = '1.18.4'
         mockito = '2.23.0'
@@ -60,6 +61,7 @@ subprojects {
             compileOnly "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind"
 
             testCompile "org.mockito:mockito-core:$mockito"
+            testCompile 'com.squareup.okhttp3:mockwebserver:3.11.0'
 
             testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiter"
             testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiter"
@@ -294,7 +296,7 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
 }
 
 coveralls {
-    sourceDirs = projects.sourceSets.main.allSource.srcDirs.flatten()
+    sourceDirs = projects.sourceSets.main.allSource.srcDirs.flatten().findAll {file -> !file.getPath().contains("swagger-code") }
     jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
 

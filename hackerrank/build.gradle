@@ -1,0 +1,5 @@
+version = "$hackerrank"
+
+dependencies {
+    compile "com.squareup.okhttp3:okhttp:$okhttp"
+}

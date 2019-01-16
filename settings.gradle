@@ -4,4 +4,5 @@ include 'it-test'
 include 'slack'
 include 'spi'
 include 'echo'
+include 'hackerrank'
 
