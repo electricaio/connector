@@ -10,6 +10,7 @@ definitions:
     description: Possible actions for Slack Channel V1 connector.
     enum:
       - SendText
+      - SendAttachment
 
   # Send text
   SlackChannelV1SendTextPayload:
@@ -18,3 +19,121 @@ definitions:
       message:
         type: string
         description: A plain text to be sent.
+
+  # Send attachment
+  SlackChannelV1SendAttachmentPayload:
+    properties:
+      text:
+        description: "It is used as title of message when include action type as buttons."
+        type: string
+      channel:
+        description: "Its a unique channel Id for a slack shared channel. A shared channel is a bridge between teams needing to work together. Users converse seamlessly with individuals at other organizations"
+        type: string
+      attachments:
+        type: array
+        description: "List of attachment."
+        items:
+          $ref: "#/definitions/Attachment"
+    required:
+      - attachments
+
+  Attachment:
+    description: "Use attachment parameters to customize the appearance of a message."
+    type: object
+    properties:
+      fallback:
+        description: "A plain-text summary of the attachment.This text will be used in clients that don't show formatted text (eg. IRC, mobile notifications) and should not contain any markup. It is required when using link buttons unless noted"
+        type: string
+      color:
+        description: "An optional value hex color code (eg. #439FE0). This value is used to color the border along the left side of the message."
+        type: string
+      pretext:
+        description: "This is optional text that appears above the message attachment block."
+        type: string
+      author_name:
+        description: "Small text used to display the author's name."
+        type: string
+      author_link:
+        description: "A valid URL that will hyperlink the author_name text mentioned above. Will only work if author_name is present."
+        type: string
+      author_icon:
+        description: "A valid URL that displays a small 16x16px image to the left of the author_name text. Will only work if author_name is present."
+        type: string
+      title:
+        description: "The title is displayed as larger, bold text near the top of a message attachment."
+        type: string
+      title_link:
+        description: "By passing a valid URL in the title_link parameter (optional), the title text will be hyperlinked."
+        type: string
+      text:
+        description: "This is the main text in a message attachment.The content will automatically collapse if it contains 700+ characters or 5+ linebreaks, and will display a \"Show more...\" link to expand the content."
+        type: string
+      image_url:
+        description: "A valid URL to an image file that will be displayed inside a message attachment. We currently support the following formats: GIF, JPEG, PNG, and BMP.Large images will be resized to a maximum width of 360px or a maximum height of 500px, while still maintaining the original aspect ratio."
+        type: string
+      thumb_url:
+        description: "A valid URL to an image file that will be displayed as a thumbnail on the right side of a message attachment. We currently support the following formats: GIF, JPEG, PNG, and BMP.The thumbnail's longest dimension will be scaled down to 75px while maintaining the aspect ratio of the image. The filesize of the image must also be less than 500 KB.For best results, please use images that are already 75px by 75px."
+        type: string
+      footer:
+        description: "Add some brief text to help contextualize and identify an attachment. Limited to 300 characters, and may be truncated further when displayed to users in environments with limited screen real estate."
+        type: string
+      footer_icon:
+        description: "To render a small icon beside your footer text, provide a publicly accessible URL string in the footer_icon field. You must also provide a footer for the field to be recognized."
+        type: string
+      ts:
+        description: "By providing the ts field with an integer value in \"epoch time\", the attachment will display an additional timestamp value as part of the attachment's footer."
+        type: integer
+        format: int64
+      fields:
+        description: "List of fields"
+        type: array
+        items:
+          $ref: "#/definitions/Field"
+      actions:
+        description: "List of Action"
+        type: array
+        items:
+          $ref: "#/definitions/Action"
+  Field:
+    description: "Fields are defined as an array. Each entry in the array is a single field. Each field is defined as a dictionary with key-value pairs.For best results, include no more than 2-3 key/value pairs. There is no optimal, programmatic way to display a greater amount of tabular data on Slack today."
+    type: object
+    properties:
+      title:
+        description: "Shown as a bold heading above the value text. It cannot contain markup and will be escaped for you."
+        type: string
+      value:
+        description: "The text value of the field. It may contain standard message markup and must be escaped as normal. May be multi-line."
+        type: string
+      short:
+        description: "An optional flag indicating whether the value is short enough to be displayed side-by-side with other values."
+        type: boolean
+
+  Action:
+    description: "Simplify complex workflows and empower users to take decisive action by adding interactive buttons to your messages."
+    type: object
+    properties:
+      type:
+        description: "Provide *button* when this action is a message button or provide *select* when the action is a message menu.It is required when using link buttons unless noted."
+        type: string
+        enum:
+          - button
+          - select
+      name:
+        description: "Name of action"
+        type: string
+      text:
+        description: "A UTF-8 string label for this button. Be brief but descriptive and actionable.It is required when using action type buttons unless noted"
+        type: string
+      url:
+        description: "The fully qualified http or https URL to deliver users to. Invalid URLs will result in a message posted with the button omitted.It is required when using  action type buttons unless noted"
+        type: string
+      style:
+        description: "Optional - Setting to *primary* turns the button green and indicates the best forward action to take. Providing *danger* turns the button red and indicates it some kind of destructive action. Use sparingly. Be *default*, buttons will use the UI's default text color."
+        type: string
+        enum:
+          - default
+          - primary
+          - danger
+      confirm:
+        description: "Confirm actions in your application's UI before committing."
+        type: string

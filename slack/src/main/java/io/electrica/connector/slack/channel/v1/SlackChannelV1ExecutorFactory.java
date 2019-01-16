@@ -1,5 +1,6 @@
 package io.electrica.connector.slack.channel.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auto.service.AutoService;
 import com.google.common.annotations.VisibleForTesting;
 import io.electrica.connector.slack.channel.v1.model.SlackChannelV1Action;
@@ -30,6 +31,7 @@ public class SlackChannelV1ExecutorFactory implements ConnectorExecutorFactory {
 
     private OkHttpClient httpClient;
     private String urlTemplate;
+    private ObjectMapper mapper;
 
     @Override
     public String getErn() {
@@ -45,6 +47,7 @@ public class SlackChannelV1ExecutorFactory implements ConnectorExecutorFactory {
         httpClient = new OkHttpClient.Builder()
                 .connectionPool(new ConnectionPool(maxIdleConnections, keepAliveDuration, TimeUnit.MINUTES))
                 .build();
+        mapper = new ObjectMapper();
     }
 
     @Override
@@ -53,6 +56,8 @@ public class SlackChannelV1ExecutorFactory implements ConnectorExecutorFactory {
         switch (action) {
             case SENDTEXT:
                 return new SlackChannelV1SendTextExecutor(httpClient, urlTemplate, facade);
+            case SENDATTACHMENT:
+                return new SlackChannelV1SendAttachmentExecutor(httpClient, urlTemplate, facade, mapper);
             default:
                 throw Exceptions.validation("Unsupported action: " + action);
         }
