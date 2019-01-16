@@ -20,20 +20,29 @@ definitions:
         type: string
         description: A plain text to be sent.
 
-    # Send text
+  # Send attachment
   SlackChannelV1SendAttachmentPayload:
     properties:
+      text:
+        description: "It is used as title of message when include action type as buttons."
+        type: string
+      channel:
+        description: "Its a unique channel Id for a slack shared channel. A shared channel is a bridge between teams needing to work together. Users converse seamlessly with individuals at other organizations"
+        type: string
       attachments:
         type: array
+        description: "List of attachment."
         items:
           $ref: "#/definitions/Attachment"
+    required:
+      - attachments
 
   Attachment:
-    description: "Attachments let you add more context to a message, making them more useful and effective. Please limit your attachments to no more than 20 else Integration Exception is thrown.If you'd like to avoid text wrapping, try to not exceed 75 characters per line"
+    description: "Use attachment parameters to customize the appearance of a message."
     type: object
     properties:
       fallback:
-        description: "A plain-text summary of the attachment."
+        description: "A plain-text summary of the attachment.This text will be used in clients that don't show formatted text (eg. IRC, mobile notifications) and should not contain any markup. It is required when using link buttons unless noted"
         type: string
       color:
         description: "An optional value hex color code (eg. #439FE0). This value is used to color the border along the left side of the message."
@@ -76,10 +85,12 @@ definitions:
         type: integer
         format: int64
       fields:
+        description: "List of fields"
         type: array
         items:
           $ref: "#/definitions/Field"
       actions:
+        description: "List of Action"
         type: array
         items:
           $ref: "#/definitions/Action"
@@ -102,7 +113,7 @@ definitions:
     type: object
     properties:
       type:
-        description: "Provide *button* when this action is a message button or provide *select* when the action is a message menu."
+        description: "Provide *button* when this action is a message button or provide *select* when the action is a message menu.It is required when using link buttons unless noted."
         type: string
         enum:
           - button
@@ -111,10 +122,10 @@ definitions:
         description: "Name of action"
         type: string
       text:
-        description: "A UTF-8 string label for this button. Be brief but descriptive and actionable."
+        description: "A UTF-8 string label for this button. Be brief but descriptive and actionable.It is required when using action type buttons unless noted"
         type: string
       url:
-        description: "The fully qualified http or https URL to deliver users to. Invalid URLs will result in a message posted with the button omitted ."
+        description: "The fully qualified http or https URL to deliver users to. Invalid URLs will result in a message posted with the button omitted.It is required when using  action type buttons unless noted"
         type: string
       style:
         description: "Optional - Setting to *primary* turns the button green and indicates the best forward action to take. Providing *danger* turns the button red and indicates it some kind of destructive action. Use sparingly. Be *default*, buttons will use the UI's default text color."
@@ -126,4 +137,3 @@ definitions:
       confirm:
         description: "Confirm actions in your application's UI before committing."
         type: string
-

@@ -1,9 +1,8 @@
 package io.electrica.connector.slack.channel.v1;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.annotations.VisibleForTesting;
 import io.electrica.connector.slack.channel.v1.model.Attachment;
 import io.electrica.connector.slack.channel.v1.model.SlackChannelV1SendAttachmentPayload;
 import io.electrica.connector.spi.ConnectorExecutor;
@@ -21,10 +20,16 @@ import static io.electrica.connector.spi.Validations.requiredPayloadField;
 public class SlackChannelV1SendAttachmentExecutor implements ConnectorExecutor {
 
     private static final Integer MAX_ATTACHMENTS = 20;
+    private static final MediaType APPLICATION_JSON = MediaType.parse("application/json; charset=utf-8");
     private final OkHttpClient httpClient;
     private final String url;
     private final SlackChannelV1SendAttachmentPayload payload;
     private final ObjectMapper mapper;
+
+    @VisibleForTesting
+    static final String TOO_MANY_ATTACHMENTS = "Too Many attachments";
+    @VisibleForTesting
+    static final String AT_LEAST_ONE_ATTACHMENT_PRESENT = "At least one attachment should be present in the payload";
 
     SlackChannelV1SendAttachmentExecutor(
             OkHttpClient httpClient,
@@ -42,11 +47,9 @@ public class SlackChannelV1SendAttachmentExecutor implements ConnectorExecutor {
     @Override
     public Object run() throws IntegrationException {
         List<Attachment> attachments = requiredPayloadField(payload.getAttachments(), "attachments");
-        if (attachments.size() > MAX_ATTACHMENTS) {
-            throw Exceptions.validation("Restrict the attachments to less than " + MAX_ATTACHMENTS);
-        }
-        String toJson = createAttachmentMessage(attachments);
-        RequestBody body = RequestBody.create(MediaType.get("application/json"), toJson);
+        validateAttachments(attachments);
+        String toJson = createAttachmentMessage(payload);
+        RequestBody body = RequestBody.create(APPLICATION_JSON, toJson);
 
         Request request = new Request.Builder()
                 .url(url)
@@ -56,7 +59,7 @@ public class SlackChannelV1SendAttachmentExecutor implements ConnectorExecutor {
         try {
             Response response = httpClient.newCall(request).execute();
             if (!response.isSuccessful()) {
-                throw Exceptions.io("Bad response: " + response);
+                throw Exceptions.generic("Bad response: " + response);
             }
             return null;
         } catch (IOException e) {
@@ -64,13 +67,22 @@ public class SlackChannelV1SendAttachmentExecutor implements ConnectorExecutor {
         }
     }
 
-    private String createAttachmentMessage(List<Attachment> attachments) {
-        ObjectNode parent = mapper.createObjectNode();
-        ArrayNode arrayNode = parent.putArray("attachments");
-        for (Attachment attachment : attachments) {
-            JsonNode node = mapper.valueToTree(attachment);
-            arrayNode.add(node);
+    private String createAttachmentMessage(SlackChannelV1SendAttachmentPayload payload) throws IntegrationException {
+        try {
+            return mapper.writeValueAsString(payload);
+        } catch (JsonProcessingException e) {
+            throw Exceptions.io("Json Processing Exception", e);
         }
-        return parent.toString();
+    }
+
+
+    private void validateAttachments(List<Attachment> attachmentList) throws IntegrationException {
+        if (attachmentList != null && !attachmentList.isEmpty()) {
+            if (attachmentList.size() > MAX_ATTACHMENTS) {
+                throw Exceptions.validation(TOO_MANY_ATTACHMENTS);
+            }
+        } else {
+            throw Exceptions.validation(AT_LEAST_ONE_ATTACHMENT_PRESENT);
+        }
     }
 }
