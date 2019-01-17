@@ -23,6 +23,6 @@ public class ForWorkV1TestsShowExecutor implements ConnectorExecutor {
     public Object run() throws IntegrationException {
         String token = facade.getTokenAuthorization().getToken();
         int id = facade.readPayload(Integer.class);
-        return new HTTPGetExecutor(httpClient, this.url + id, token).run();
+        return new HTTPGetExecutor(httpClient, this.url + "/" + id, token).run();
     }
 }
