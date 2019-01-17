@@ -61,7 +61,6 @@ subprojects {
             compileOnly "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind"
 
             testCompile "org.mockito:mockito-core:$mockito"
-            testCompile 'com.squareup.okhttp3:mockwebserver:3.11.0'
 
             testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiter"
             testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiter"

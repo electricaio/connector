@@ -1,8 +1,8 @@
-package io.electrica.hackerrank.tests.v3;
+package io.electrica.hackerrank.tests.v1;
 
 import com.google.auto.service.AutoService;
 import com.google.common.annotations.VisibleForTesting;
-import io.electrica.connector.hackerrank.work.v3.model.WorkV1Action;
+import io.electrica.connector.hackerrank.work.v1.model.WorkV1Action;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ConnectorExecutorFactory;
 import io.electrica.connector.spi.ConnectorProperties;
@@ -15,11 +15,10 @@ import okhttp3.OkHttpClient;
 import java.util.concurrent.TimeUnit;
 
 @AutoService(ConnectorExecutorFactory.class)
-public class HackerRankForWorkV1ExecutorFactory implements ConnectorExecutorFactory {
-
+public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactory {
 
     @VisibleForTesting
-    static final String TESTS_URL_TEMPLATE_PROPERTY = "tests.url-template";
+    static final String URL_TEMPLATE_PROPERTY = "tests.url-template";
     @VisibleForTesting
     static final String MAX_IDLE_CONNECTIONS_PROPERTY = "http-client.max-idle-connections";
     @VisibleForTesting
@@ -30,16 +29,16 @@ public class HackerRankForWorkV1ExecutorFactory implements ConnectorExecutorFact
 
     private String testsUrlTemplate;
 
+    private static final String DEFAULT_URL_TEMPLATE = "https://www.hackerrank.com/x/api/v1/tests";
+
     @Override
     public String getErn() {
-        return "ern://hackerrank:work:1";
+        return "ern://hackerrank:tests:1";
     }
-
-    private static final String DEFAULT_TESTS_URL_TEMPLATE = "https://www.hackerrank.com/x/api/v3/tests";
 
     @Override
     public void setup(ConnectorProperties properties) throws IntegrationException {
-        testsUrlTemplate = properties.getString(TESTS_URL_TEMPLATE_PROPERTY, DEFAULT_TESTS_URL_TEMPLATE);
+        testsUrlTemplate = properties.getString(URL_TEMPLATE_PROPERTY, DEFAULT_URL_TEMPLATE);
 
         int maxIdleConnections = properties.getInteger(MAX_IDLE_CONNECTIONS_PROPERTY, DEFAULT_MAX_IDLE_CONNECTIONS);
         int keepAliveDuration = properties.getInteger(KEEP_ALIVE_DURATION_MIN_PROPERTY, DEFAULT_KEEP_ALIVE_DURATION);
@@ -54,12 +53,11 @@ public class HackerRankForWorkV1ExecutorFactory implements ConnectorExecutorFact
 
         switch (action) {
             case TESTSINDEX:
-                return new ForWorkV1TestsIndexExecutor(facade, httpClient, testsUrlTemplate);
+                return new TestsIndexV1Executor(facade, httpClient, testsUrlTemplate);
             case TESTSSHOW:
-                return new ForWorkV1TestsShowExecutor(facade, httpClient, testsUrlTemplate);
+                return new ShowTestV1Executor(facade, httpClient, testsUrlTemplate);
             default:
                 throw Exceptions.validation("Unsupported action: " + action);
         }
     }
-
 }

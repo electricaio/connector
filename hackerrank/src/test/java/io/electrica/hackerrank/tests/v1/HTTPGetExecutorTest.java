@@ -1,4 +1,4 @@
-package io.electrica.hackerrank.tests.v3;
+package io.electrica.hackerrank.tests.v1;
 
 import io.electrica.connector.spi.exception.IntegrationException;
 import okhttp3.OkHttpClient;

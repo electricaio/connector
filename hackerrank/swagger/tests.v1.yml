@@ -274,18 +274,6 @@ definitions:
         description: If set to false, then candidate will not be asked to agree to acknowledgement text.
     title: Tests
 
-  # We should move this to a common place
-  LimitOffset:
-    properties:
-      limit:
-        description: Number of records to fetch
-        required: true
-        type: integer
-      offset:
-        description: Offset of records
-        required: true
-        type: integer
-
   TestsIndexResponse:
     properties:
       data:
@@ -314,3 +302,23 @@ definitions:
       total:
         type: string
         description: Total items for current query
+
+
+  # We should move these to a common place
+  LimitOffset:
+    properties:
+      limit:
+        description: Number of records to fetch
+        required: true
+        type: integer
+      offset:
+        description: Offset of records
+        required: true
+        type: integer
+
+  IdPayload:
+    properties:
+      id:
+        description: The Id of the resource you want to retrieve
+        required: true
+        type: integer
