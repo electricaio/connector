@@ -1,9 +1,9 @@
 ---
 swagger: "2.0"
 info:
-  description: Documentation for the API of HackerRank for Work.
+  description: Documentation for the API of HackerRank for Work Tests Object.
   version: v1
-  title: HackerRank for Work
+  title: HackerRank for Work Tests Object
 
 definitions:
   WorkV1Action:
@@ -316,7 +316,7 @@ definitions:
         required: true
         type: integer
 
-  IdPayload:
+  HackerRankTestsShowPayload:
     properties:
       id:
         description: The Id of the resource you want to retrieve

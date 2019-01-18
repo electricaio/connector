@@ -1,5 +1,6 @@
 package io.electrica.hackerrank.tests.v1;
 
+import com.fasterxml.jackson.databind.node.TextNode;
 import io.electrica.connector.spi.exception.IntegrationException;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
@@ -85,7 +86,7 @@ class HTTPGetExecutorTest {
         mockedResponse.setBody(goodResponse);
         server.enqueue(mockedResponse);
         Object result = httpGetExecutor.run();
-        assertEquals(goodResponse, result);
+        assertEquals(new TextNode(goodResponse), result);
     }
 
 

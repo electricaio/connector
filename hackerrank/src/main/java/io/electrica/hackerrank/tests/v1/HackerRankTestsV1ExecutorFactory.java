@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactory {
 
     @VisibleForTesting
-    static final String URL_TEMPLATE_PROPERTY = "tests.url-template";
+    static final String URL_TEMPLATE_PROPERTY = "api.url-template";
     @VisibleForTesting
     static final String MAX_IDLE_CONNECTIONS_PROPERTY = "http-client.max-idle-connections";
     @VisibleForTesting
@@ -33,7 +33,7 @@ public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactor
 
     @Override
     public String getErn() {
-        return "ern://hackerrank:tests:1";
+        return "ern://hackerrank-v3:tests:1";
     }
 
     @Override
@@ -50,7 +50,6 @@ public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactor
     @Override
     public ConnectorExecutor create(ServiceFacade facade) throws IntegrationException {
         WorkV1Action action = facade.readAction(WorkV1Action.class);
-
         switch (action) {
             case TESTSINDEX:
                 return new TestsIndexV1Executor(facade, httpClient, testsUrlTemplate);

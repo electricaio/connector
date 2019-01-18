@@ -1,6 +1,6 @@
 package io.electrica.hackerrank.tests.v1;
 
-import io.electrica.connector.hackerrank.work.v1.model.IdPayload;
+import io.electrica.connector.hackerrank.work.v1.model.HackerRankTestsShowPayload;
 import io.electrica.connector.hackerrank.work.v1.model.WorkV1Action;
 import io.electrica.connector.spi.exception.ExceptionCodes;
 import io.electrica.connector.spi.exception.IntegrationException;
@@ -33,7 +33,7 @@ class ShowTestV1ExecutorTest {
     void individualTestIsReturnedTest() throws IntegrationException {
         InvocationContext context = InvocationContext.builder(WorkV1Action.TESTSSHOW)
                 .authorization(SecuredAuthorizations.token(HR_ACCESS_TOKEN))
-                .payload(new IdPayload().id(359653))
+                .payload(new HackerRankTestsShowPayload().id(359653))
                 .build();
 
         Object result = emulator.runIntegration(context);
@@ -44,7 +44,7 @@ class ShowTestV1ExecutorTest {
     void errorThrownForUnknownTest() throws IntegrationException {
         InvocationContext context = InvocationContext.builder(WorkV1Action.TESTSSHOW)
                 .authorization(SecuredAuthorizations.token(HR_ACCESS_TOKEN))
-                .payload(new IdPayload().id(-1))
+                .payload(new HackerRankTestsShowPayload().id(-1))
                 .build();
 
         assertThrows(IntegrationException.class, () -> {

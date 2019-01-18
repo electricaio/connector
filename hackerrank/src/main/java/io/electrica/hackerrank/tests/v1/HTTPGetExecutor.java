@@ -1,5 +1,6 @@
 package io.electrica.hackerrank.tests.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.exception.Exceptions;
 import io.electrica.connector.spi.exception.IntegrationException;
@@ -43,7 +44,7 @@ public class HTTPGetExecutor implements ConnectorExecutor {
                 throw Exceptions.generic(response.body().string());
             }
 
-            return response.body().string();
+            return new ObjectMapper().valueToTree(response.body().string());
         } catch (IOException e) {
             throw Exceptions.io("Network error", e);
         }

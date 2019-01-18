@@ -1,6 +1,6 @@
 package io.electrica.hackerrank.tests.v1;
 
-import io.electrica.connector.hackerrank.work.v1.model.IdPayload;
+import io.electrica.connector.hackerrank.work.v1.model.HackerRankTestsShowPayload;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ServiceFacade;
 import io.electrica.connector.spi.exception.IntegrationException;
@@ -23,7 +23,7 @@ public class ShowTestV1Executor implements ConnectorExecutor {
     @Override
     public Object run() throws IntegrationException {
         String token = facade.getTokenAuthorization().getToken();
-        IdPayload idPayload = facade.readPayload(IdPayload.class);
+        HackerRankTestsShowPayload idPayload = facade.readPayload(HackerRankTestsShowPayload.class);
         return new HTTPGetExecutor(httpClient, this.url + "/" + idPayload.getId(), token).run();
     }
 }
