@@ -1,5 +1,6 @@
-package io.electrica.hackerrank.tests.v1;
+package io.electrica.connector.hackerrank.tests.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 import io.electrica.connector.spi.exception.IntegrationException;
 import okhttp3.OkHttpClient;
@@ -43,7 +44,7 @@ class HTTPGetExecutorTest {
     void setUp() {
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .build();
-        httpGetExecutor = new HTTPGetExecutor(httpClient, url, token);
+        httpGetExecutor = new HTTPGetExecutor(httpClient, new ObjectMapper(), url, token);
     }
 
     @AfterAll

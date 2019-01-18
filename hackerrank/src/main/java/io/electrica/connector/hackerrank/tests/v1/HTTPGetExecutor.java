@@ -1,4 +1,4 @@
-package io.electrica.hackerrank.tests.v1;
+package io.electrica.connector.hackerrank.tests.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.connector.spi.ConnectorExecutor;
@@ -17,13 +17,16 @@ public class HTTPGetExecutor implements ConnectorExecutor {
 
     private final String url;
     private final String token;
+    private final ObjectMapper mapper;
 
     public HTTPGetExecutor(
             OkHttpClient httpClient,
+            ObjectMapper mapper,
             String url,
             String token
     ) {
         this.httpClient = httpClient;
+        this.mapper = mapper;
         this.token = token;
         this.url = url;
     }
@@ -44,7 +47,7 @@ public class HTTPGetExecutor implements ConnectorExecutor {
                 throw Exceptions.generic(response.body().string());
             }
 
-            return new ObjectMapper().valueToTree(response.body().string());
+            return mapper.valueToTree(response.body().string());
         } catch (IOException e) {
             throw Exceptions.io("Network error", e);
         }

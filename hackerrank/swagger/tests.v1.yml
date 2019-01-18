@@ -1,149 +1,19 @@
 ---
 swagger: "2.0"
 info:
-  description: Documentation for the API of HackerRank for Work Tests Object.
+  description: Documentation for the API of HackerRank for Work V3 Tests Object.
   version: v1
   title: HackerRank for Work Tests Object
 
 definitions:
-  WorkV1Action:
+  HackerRankV3TestsAction:
     type: string
     description: Possible actions for HackerRank for Work V1 connector.
     enum:
       - TestsIndex
       - TestsShow
 
-  TestsShow:
-    properties:
-      id:
-        type: string
-        description: ID of the test
-      unique_id:
-        type: string
-        description: Candidate facing ID of the test
-      name:
-        type: string
-        description: Name of the test.
-      duration:
-        type: integer
-        description: Duration of test in minutes.
-      owner:
-        type: string
-        description: User who created this test.
-      instructions:
-        type: string
-        description: HTML for instructions displayed to candidate in the test login page.
-      starred:
-        type: boolean
-        description: Whether this test has been 'starred' by the user of the api
-      state:
-        type: string
-        description: Current state of the test
-        enum:
-          - active
-          - archived
-      locked:
-        type: boolean
-        description: Whether this test is locked or not. Locked test cannot be edited, however candidates can be invited to the test.
-      languages:
-        type: array
-        description: 'List of languages available in the test for coding and approximate
-          questions. Note: *null* in this fields means that all languages are enabled'
-        items:
-          type: string
-      candidate_details:
-        type: array
-        description: 'List of details that candidates will be asked to enter before
-          logging into the test. These details will be available in the report view
-          of the test. It should be an <em>Array of JSON</em>.<br /><br />List of
-          default fields:[<code>full_name</code>, <code>city</code>, <code>work_experience</code>,
-          <code>roll_number</code>, <code>email_address</code>, <code>year_of_graduation</code>,
-          <code>cgpa</code>, <code>univ</code>, <code>phone_number</code>, <code>contact_recruiter</code>,
-          <code>branch</code>, <code>gender</code>, <code>degree</code>, <code>role</code>,
-          <code>resume</code>, <code>pgdegree</code>, <code>city_graduation</code>,
-          <code>gpa</code>, <code>major</code>, <code>linkedin</code>]<br />For default
-          fields add field in following way <code>{predefined_label: ''roll_number'',
-          required: true}</code> in the array. <br /><br />If you want to add another
-          field to candidate_details not present in default list, you can add in the
-          following way: <br /><code>{title: ''First Name'', required: true, type:
-          ''input''}</code>. Following are the supported input types: <code>[input,
-          select, radio, checkbox, file]</code><br /><br />In case of input being
-          select, you can send options for select in following way: <code>{title:
-          ''Age'', required: true, type: ''select'', options: [''<20'', ''20-30'',
-          ''>30'']}</code><br /><br />Order of candidate_details will be same as order
-          of array'
-        items:
-          type: string
-      custom_acknowledge_text:
-        type: string
-        description: Candidate will be asked to agree to this text before logging into the test.
-      cutoff_score:
-        type: integer
-        description: If set, then candidates scoring equal or more than this value will automatically be placed into "Qualified" bucket, while candidates scoring less will be placed in "Failed" bucket
-      master_password:
-        type: string
-        description: If set, candidates can login to the test using this password
-      hide_compile_test:
-        type: boolean
-        description: If set to true then candidate will not be able to see compile button for coding and approximate type questions.
-      tags:
-        type: array
-        description: List of tags associated with this test
-        items:
-          type: string
-      job_roles:
-        type: array
-        description: List of job roles associated with this test.
-        items:
-          type: string
-      experience:
-        type: array
-        description: Experience levels associated with this test.
-        items:
-          type: string
-      questions:
-        type: array
-        description: List of question ids associated with this test.
-        items:
-          type: string
-      sections:
-        type: object
-        description: Section slot data for the test.
-        properties: {}
-      mcq_incorrect_score:
-        type: integer
-        description: Score to deduct from total score per incorect MCQ question
-      mcq_correct_score:
-        type: integer
-        description: Score to add to total score per correct MCQ question
-      locked_by:
-        type: string
-        description: User who locked this test (if any).
-      secure:
-        type: boolean
-        description: If set to true then test will be fulllscreened for candidates
-      short_login_url:
-        type: string
-        description: Login URL for the test. This requires master password to be setup for test.
-      public_login_url:
-        type: string
-        description: Public login URL for the test. This URL do not require a password.
-      shuffle_questions:
-        type: boolean
-        description: If true than questions will be shuffled
-      test_admins:
-        type: array
-        description: Test admins will also receive summary report mails when candidate completes a test.
-        items:
-          type: string
-      hide_template:
-        type: boolean
-        description: If set to true then head and tail templates will not be shown to candidates.
-      enable_acknowledgement:
-        type: boolean
-        description: If set to false, then candidate will not be asked to agree to acknowledgement text.
-    title: Tests
-  TestsIndex:
+  HackerRankV3TestsShowResponse:
     properties:
       id:
         type: string
@@ -274,13 +144,144 @@ definitions:
         description: If set to false, then candidate will not be asked to agree to acknowledgement text.
     title: Tests
 
-  TestsIndexResponse:
+  HackerRankV3TestsIndex:
+    properties:
+      id:
+        type: string
+        description: ID of the test
+      unique_id:
+        type: string
+        description: Candidate facing ID of the test
+      name:
+        type: string
+        description: Name of the test.
+      duration:
+        type: integer
+        description: Duration of test in minutes.
+      owner:
+        type: string
+        description: User who created this test.
+      instructions:
+        type: string
+        description: HTML for instructions displayed to candidate in the test login page.
+      starred:
+        type: boolean
+        description: Whether this test has been 'starred' by the user of the api
+      state:
+        type: string
+        description: Current state of the test
+        enum:
+          - active
+          - archived
+      locked:
+        type: boolean
+        description: Whether this test is locked or not. Locked test cannot be edited, however candidates can be invited to the test.
+      languages:
+        type: array
+        description: 'List of languages available in the test for coding and approximate
+          questions. Note: *null* in this fields means that all languages are enabled'
+        items:
+          type: string
+      candidate_details:
+        type: array
+        description: 'List of details that candidates will be asked to enter before
+          logging into the test. These details will be available in the report view
+          of the test. It should be an <em>Array of JSON</em>.<br /><br />List of
+          default fields:[<code>full_name</code>, <code>city</code>, <code>work_experience</code>,
+          <code>roll_number</code>, <code>email_address</code>, <code>year_of_graduation</code>,
+          <code>cgpa</code>, <code>univ</code>, <code>phone_number</code>, <code>contact_recruiter</code>,
+          <code>branch</code>, <code>gender</code>, <code>degree</code>, <code>role</code>,
+          <code>resume</code>, <code>pgdegree</code>, <code>city_graduation</code>,
+          <code>gpa</code>, <code>major</code>, <code>linkedin</code>]<br />For default
+          fields add field in following way <code>{predefined_label: ''roll_number'',
+          required: true}</code> in the array. <br /><br />If you want to add another
+          field to candidate_details not present in default list, you can add in the
+          following way: <br /><code>{title: ''First Name'', required: true, type:
+          ''input''}</code>. Following are the supported input types: <code>[input,
+          select, radio, checkbox, file]</code><br /><br />In case of input being
+          select, you can send options for select in following way: <code>{title:
+          ''Age'', required: true, type: ''select'', options: [''<20'', ''20-30'',
+          ''>30'']}</code><br /><br />Order of candidate_details will be same as order
+          of array'
+        items:
+          type: string
+      custom_acknowledge_text:
+        type: string
+        description: Candidate will be asked to agree to this text before logging into the test.
+      cutoff_score:
+        type: integer
+        description: If set, then candidates scoring equal or more than this value will automatically be placed into "Qualified" bucket, while candidates scoring less will be placed in "Failed" bucket
+      master_password:
+        type: string
+        description: If set, candidates can login to the test using this password
+      hide_compile_test:
+        type: boolean
+        description: If set to true then candidate will not be able to see compile button for coding and approximate type questions.
+      tags:
+        type: array
+        description: List of tags associated with this test
+        items:
+          type: string
+      job_roles:
+        type: array
+        description: List of job roles associated with this test.
+        items:
+          type: string
+      experience:
+        type: array
+        description: Experience levels associated with this test.
+        items:
+          type: string
+      questions:
+        type: array
+        description: List of question ids associated with this test.
+        items:
+          type: string
+      sections:
+        type: object
+        description: Section slot data for the test.
+        properties: {}
+      mcq_incorrect_score:
+        type: integer
+        description: Score to deduct from total score per incorect MCQ question
+      mcq_correct_score:
+        type: integer
+        description: Score to add to total score per correct MCQ question
+      locked_by:
+        type: string
+        description: User who locked this test (if any).
+      secure:
+        type: boolean
+        description: If set to true then test will be fulllscreened for candidates
+      short_login_url:
+        type: string
+        description: Login URL for the test. This requires master password to be setup for test.
+      public_login_url:
+        type: string
+        description: Public login URL for the test. This URL do not require a password.
+      shuffle_questions:
+        type: boolean
+        description: If true than questions will be shuffled
+      test_admins:
+        type: array
+        description: Test admins will also receive summary report mails when candidate completes a test.
+        items:
+          type: string
+      hide_template:
+        type: boolean
+        description: If set to true then head and tail templates will not be shown to candidates.
+      enable_acknowledgement:
+        type: boolean
+        description: If set to false, then candidate will not be asked to agree to acknowledgement text.
+    title: Tests
+
+  HackerRankV3TestsIndexResponse:
     properties:
       data:
         type: array
         description: List of requested tests
         items:
-          $ref: '#/definitions/TestsIndex'
+          $ref: '#/definitions/HackerRankV3TestsIndex'
       page_total:
         type: integer
         description: Count of total tests in current page
@@ -304,7 +305,6 @@ definitions:
         description: Total items for current query
 
 
-  # We should move these to a common place
   LimitOffset:
     properties:
       limit:
@@ -316,7 +316,7 @@ definitions:
         required: true
         type: integer
 
-  HackerRankTestsShowPayload:
+  HackerRankV3TestsShowPayload:
     properties:
       id:
         description: The Id of the resource you want to retrieve

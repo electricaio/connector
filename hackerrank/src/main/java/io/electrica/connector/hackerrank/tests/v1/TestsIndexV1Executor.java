@@ -1,6 +1,7 @@
-package io.electrica.hackerrank.tests.v1;
+package io.electrica.connector.hackerrank.tests.v1;
 
-import io.electrica.connector.hackerrank.work.v1.model.LimitOffset;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.electrica.connector.hackerrank.tests.v1.model.LimitOffset;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ServiceFacade;
 import io.electrica.connector.spi.exception.IntegrationException;
@@ -14,10 +15,13 @@ public class TestsIndexV1Executor implements ConnectorExecutor {
     private final OkHttpClient httpClient;
     private final String url;
     private final String token;
+    private final ObjectMapper mapper;
 
-    public TestsIndexV1Executor(ServiceFacade facade, OkHttpClient httpClient, String url) throws IntegrationException {
+    public TestsIndexV1Executor(ServiceFacade facade, OkHttpClient httpClient, ObjectMapper mapper, String url)
+            throws IntegrationException {
         this.facade = facade;
         this.httpClient = httpClient;
+        this.mapper = mapper;
         this.token = facade.getTokenAuthorization().getToken();
         LimitOffset payload = facade.readPayload(LimitOffset.class);
         String urlParams = String.format(URL_QUERY_PARAMETERS, payload.getLimit(), payload.getOffset());
@@ -27,6 +31,6 @@ public class TestsIndexV1Executor implements ConnectorExecutor {
     @Nullable
     @Override
     public Object run() throws IntegrationException {
-        return new HTTPGetExecutor(httpClient, url, token).run();
+        return new HTTPGetExecutor(httpClient, mapper, url, token).run();
     }
 }

@@ -1,8 +1,9 @@
-package io.electrica.hackerrank.tests.v1;
+package io.electrica.connector.hackerrank.tests.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auto.service.AutoService;
 import com.google.common.annotations.VisibleForTesting;
-import io.electrica.connector.hackerrank.work.v1.model.WorkV1Action;
+import io.electrica.connector.hackerrank.tests.v1.model.HackerRankV3TestsAction;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ConnectorExecutorFactory;
 import io.electrica.connector.spi.ConnectorProperties;
@@ -30,6 +31,7 @@ public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactor
     private String testsUrlTemplate;
 
     private static final String DEFAULT_URL_TEMPLATE = "https://www.hackerrank.com/x/api/v1/tests";
+    private ObjectMapper mapper;
 
     @Override
     public String getErn() {
@@ -39,6 +41,7 @@ public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactor
     @Override
     public void setup(ConnectorProperties properties) throws IntegrationException {
         testsUrlTemplate = properties.getString(URL_TEMPLATE_PROPERTY, DEFAULT_URL_TEMPLATE);
+        this.mapper = new ObjectMapper();
 
         int maxIdleConnections = properties.getInteger(MAX_IDLE_CONNECTIONS_PROPERTY, DEFAULT_MAX_IDLE_CONNECTIONS);
         int keepAliveDuration = properties.getInteger(KEEP_ALIVE_DURATION_MIN_PROPERTY, DEFAULT_KEEP_ALIVE_DURATION);
@@ -49,12 +52,12 @@ public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactor
 
     @Override
     public ConnectorExecutor create(ServiceFacade facade) throws IntegrationException {
-        WorkV1Action action = facade.readAction(WorkV1Action.class);
+        HackerRankV3TestsAction action = facade.readAction(HackerRankV3TestsAction.class);
         switch (action) {
             case TESTSINDEX:
-                return new TestsIndexV1Executor(facade, httpClient, testsUrlTemplate);
+                return new TestsIndexV1Executor(facade, httpClient, mapper, testsUrlTemplate);
             case TESTSSHOW:
-                return new ShowTestV1Executor(facade, httpClient, testsUrlTemplate);
+                return new ShowTestV1Executor(facade, httpClient, mapper, testsUrlTemplate);
             default:
                 throw Exceptions.validation("Unsupported action: " + action);
         }
