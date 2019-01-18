@@ -15,8 +15,8 @@
 *.iml
 *.ipr
 */out/
-*/build/
 *.class
+build/
 
 ### NetBeans ###
 /nbproject/private/
