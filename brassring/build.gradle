@@ -1,0 +1,7 @@
+version = "$brassring"
+
+dependencies {
+    compile "com.squareup.okhttp3:okhttp:$okhttp"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonDataformatXml"
+    testCompile "com.squareup.okhttp3:mockwebserver:$mockWebServer"
+}
