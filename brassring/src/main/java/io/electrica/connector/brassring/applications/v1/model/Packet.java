@@ -1,4 +1,4 @@
-package io.electrica.connector.brassring.v1.model;
+package io.electrica.connector.brassring.applications.v1.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
 import lombok.AllArgsConstructor;

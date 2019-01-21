@@ -1,4 +1,4 @@
-package io.electrica.connector.brassring.v1;
+package io.electrica.connector.brassring.applications.v1;
 
 import io.electrica.connector.spi.exception.ExceptionCodes;
 import io.electrica.connector.spi.exception.IntegrationException;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class BrassRingV1ExecutorFactoryTest extends BrassRingV1BaseTest {
+public class BrassRingApplicationsExecutorFactoryTest extends BrassRingV1BaseTest {
 
     @BeforeAll
     static void setUp() {

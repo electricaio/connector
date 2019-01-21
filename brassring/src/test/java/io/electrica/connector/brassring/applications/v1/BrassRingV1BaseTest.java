@@ -1,4 +1,4 @@
-package io.electrica.connector.brassring.v1;
+package io.electrica.connector.brassring.applications.v1;
 
 import io.electrica.connector.test.ElectricaEmulator;
 import io.electrica.connector.test.MapConnectorProperties;
@@ -15,12 +15,12 @@ public abstract class BrassRingV1BaseTest {
 
     protected static void init(String url) {
         MapConnectorProperties connectorProperties = MapConnectorProperties.builder()
-                .addString(BrassRingExecutorFactory.URL_TEMPLATE_PROPERTY, url)
-                .addInteger(BrassRingExecutorFactory.MAX_IDLE_CONNECTIONS_PROPERTY, 1)
-                .addInteger(BrassRingExecutorFactory.KEEP_ALIVE_DURATION_MIN_PROPERTY, 1)
+                .addString(BrassRingApplicationsExecutorFactory.URL_PROPERTY, url)
+                .addInteger(BrassRingApplicationsExecutorFactory.MAX_IDLE_CONNECTIONS_PROPERTY, 1)
+                .addInteger(BrassRingApplicationsExecutorFactory.KEEP_ALIVE_DURATION_MIN_PROPERTY, 1)
                 .build();
 
-        emulator = ElectricaEmulator.builder(BrassRingExecutorFactory.class)
+        emulator = ElectricaEmulator.builder(BrassRingApplicationsExecutorFactory.class)
                 .connectorProperties(connectorProperties)
                 .build();
     }

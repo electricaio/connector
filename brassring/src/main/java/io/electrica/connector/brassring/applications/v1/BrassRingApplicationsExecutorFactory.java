@@ -1,7 +1,8 @@
-package io.electrica.connector.brassring.v1;
+package io.electrica.connector.brassring.applications.v1;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.common.annotations.VisibleForTesting;
-import io.electrica.connector.brassring.application.v1.model.BrassRingV1Action;
+import io.electrica.connector.brassring.applications.v1.model.BrassRingV1Action;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ConnectorExecutorFactory;
 import io.electrica.connector.spi.ConnectorProperties;
@@ -13,10 +14,10 @@ import okhttp3.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
-public class BrassRingExecutorFactory implements ConnectorExecutorFactory {
+public class BrassRingApplicationsExecutorFactory implements ConnectorExecutorFactory {
 
     @VisibleForTesting
-    static final String URL_TEMPLATE_PROPERTY = "url-template";
+    static final String URL_PROPERTY = "url-template";
     @VisibleForTesting
     static final String MAX_IDLE_CONNECTIONS_PROPERTY = "http-client.max-idle-connections";
     @VisibleForTesting
@@ -25,10 +26,10 @@ public class BrassRingExecutorFactory implements ConnectorExecutorFactory {
     private static final int DEFAULT_MAX_IDLE_CONNECTIONS = 10;
     private static final int DEFAULT_KEEP_ALIVE_DURATION = 60;
     private static final String DEFAULT_URL_TEMPLATE = "http://localhost/";
-
+    private XmlMapper xmlMapper;
 
     private OkHttpClient httpClient;
-    private String urlTemplate;
+    private String url;
 
     @Override
     public String getErn() {
@@ -37,21 +38,22 @@ public class BrassRingExecutorFactory implements ConnectorExecutorFactory {
 
     @Override
     public void setup(ConnectorProperties properties) throws IntegrationException {
-        urlTemplate = properties.getString(URL_TEMPLATE_PROPERTY, DEFAULT_URL_TEMPLATE);
+        url = properties.getString(URL_PROPERTY, DEFAULT_URL_TEMPLATE);
 
         int maxIdleConnections = properties.getInteger(MAX_IDLE_CONNECTIONS_PROPERTY, DEFAULT_MAX_IDLE_CONNECTIONS);
         int keepAliveDuration = properties.getInteger(KEEP_ALIVE_DURATION_MIN_PROPERTY, DEFAULT_KEEP_ALIVE_DURATION);
         httpClient = new OkHttpClient.Builder()
                 .connectionPool(new ConnectionPool(maxIdleConnections, keepAliveDuration, TimeUnit.MINUTES))
                 .build();
+        xmlMapper = new XmlMapper();
     }
 
     @Override
     public ConnectorExecutor create(ServiceFacade facade) throws IntegrationException {
         BrassRingV1Action action = facade.readAction(BrassRingV1Action.class);
         switch (action) {
-            case PUT:
-                return new BrassRinglV1RequestExecutor(httpClient, urlTemplate, facade);
+            case UPDATE:
+                return new BrassRinglApplicationsV1RequestExecutor(httpClient, url, facade, xmlMapper);
             default:
                 throw Exceptions.validation("Unsupported action: " + action);
         }

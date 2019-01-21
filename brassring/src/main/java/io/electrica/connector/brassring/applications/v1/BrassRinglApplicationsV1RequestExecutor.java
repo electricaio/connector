@@ -1,8 +1,8 @@
-package io.electrica.connector.brassring.v1;
+package io.electrica.connector.brassring.applications.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import io.electrica.connector.brassring.v1.model.Envelope;
+import io.electrica.connector.brassring.applications.v1.model.Envelope;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ServiceFacade;
 import io.electrica.connector.spi.exception.Exceptions;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import static io.electrica.connector.spi.Validations.requiredPayloadField;
 
-public class BrassRinglV1RequestExecutor implements ConnectorExecutor {
+public class BrassRinglApplicationsV1RequestExecutor implements ConnectorExecutor {
 
     private static final MediaType APPLICATION_XML = MediaType.parse("application/xml; charset=utf-8");
 
@@ -22,14 +22,17 @@ public class BrassRinglV1RequestExecutor implements ConnectorExecutor {
     private final String url;
     private final String token;
     private final Envelope payload;
+    private final XmlMapper xmlMapper;
 
-    public BrassRinglV1RequestExecutor(OkHttpClient httpClient,
-                                       String url,
-                                       ServiceFacade facade) throws IntegrationException {
+    public BrassRinglApplicationsV1RequestExecutor(OkHttpClient httpClient,
+                                                   String url,
+                                                   ServiceFacade facade,
+                                                   XmlMapper xmlMapper) throws IntegrationException {
         this.httpClient = httpClient;
         this.url = url;
         this.token = facade.getTokenAuthorization().getToken();
         this.payload = facade.readPayload(Envelope.class);
+        this.xmlMapper = xmlMapper;
     }
 
     @Nullable
@@ -38,7 +41,7 @@ public class BrassRinglV1RequestExecutor implements ConnectorExecutor {
 
         String message;
         try {
-            message = new XmlMapper().writeValueAsString(payload);
+            message = xmlMapper.writeValueAsString(payload);
         } catch (JsonProcessingException e) {
             throw Exceptions.io("XML Processing Exception", e);
         }

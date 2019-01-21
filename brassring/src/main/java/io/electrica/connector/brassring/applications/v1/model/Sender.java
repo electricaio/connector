@@ -1,4 +1,4 @@
-package io.electrica.connector.brassring.v1.model;
+package io.electrica.connector.brassring.applications.v1.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

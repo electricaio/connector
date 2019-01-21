@@ -1,10 +1,8 @@
-package io.electrica.connector.brassring.v1;
+package io.electrica.connector.brassring.applications.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import io.electrica.connector.brassring.application.v1.model.BrassRingV1Action;
-import io.electrica.connector.brassring.application.v1.model.Status;
-import io.electrica.connector.brassring.v1.model.*;
+import io.electrica.connector.brassring.applications.v1.model.*;
 import io.electrica.connector.spi.ServiceFacade;
 import io.electrica.connector.spi.exception.ExceptionCodes;
 import io.electrica.connector.spi.exception.IntegrationException;
@@ -40,7 +38,7 @@ public class BrassRingV1Request extends BrassRingV1BaseTest {
     @Test
     void testPut() throws IntegrationException, IOException {
         mockGoodResponse();
-        InvocationContext context = InvocationContext.builder(BrassRingV1Action.PUT)
+        InvocationContext context = InvocationContext.builder(BrassRingV1Action.UPDATE)
                 .authorization(SecuredAuthorizations.token(BRASSRING_TOKEN))
                 .payload(createTestRequest())
                 .build();
@@ -54,7 +52,7 @@ public class BrassRingV1Request extends BrassRingV1BaseTest {
 
     @Test
     void testGetMissedPayloadThrowException() {
-        InvocationContext context = InvocationContext.builder(BrassRingV1Action.PUT)
+        InvocationContext context = InvocationContext.builder(BrassRingV1Action.UPDATE)
                 .authorization(SecuredAuthorizations.token(BRASSRING_TOKEN))
                 .build();
 
@@ -65,7 +63,7 @@ public class BrassRingV1Request extends BrassRingV1BaseTest {
 
     @Test
     void testGetMissedAuthorizationThrowException() {
-        InvocationContext context = InvocationContext.builder(BrassRingV1Action.PUT)
+        InvocationContext context = InvocationContext.builder(BrassRingV1Action.UPDATE)
                 .payload(createTestRequest())
                 .build();
 
@@ -77,7 +75,7 @@ public class BrassRingV1Request extends BrassRingV1BaseTest {
     @Test
     void unsuccessfulResponseThrowsAnError() throws IOException {
         mockErrorResponse();
-        InvocationContext context = InvocationContext.builder(BrassRingV1Action.PUT)
+        InvocationContext context = InvocationContext.builder(BrassRingV1Action.UPDATE)
                 .authorization(SecuredAuthorizations.token(BRASSRING_TOKEN))
                 .payload(createTestRequest())
                 .build();

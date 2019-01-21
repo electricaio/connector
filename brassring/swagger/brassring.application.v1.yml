@@ -9,7 +9,7 @@ definitions:
     type: string
     description: Possible actions for BrassRing V1 connector.
     enum:
-      - Put
+      - Update
 
   Status:
     type: object
@@ -41,22 +41,31 @@ definitions:
         description: "This is the HR Status value that triggered the candidate/new hire integration"
         type: string
       CANDIDATEFIRSTNAME:
+        description: "Candidate first name"
         type: string
       CANDIDATELASTNAME:
+        description: "Candidate last name"
         type: string
       DATEOFBIRTH:
+         description: "Candidate date of birth"
         type: string
       BIRTHPLACE:
+         description: "Candidate birth place"
         type: string
       COUNTRYOFBIRTH:
+        description: "Candidate country birth place"
         type: string
       GENDER:
+        description: "Candidate gender"
         type: string
       MARITALSTATUS:
+        description: "Candidate martial status"
         type: string
       NATIONALITY:
+        description: "Candidate nationality"
         type: string
       LANGUAGENAME:
+        description: "Candidate native language"
         type: string
     required:
       - CANDIDATEID
