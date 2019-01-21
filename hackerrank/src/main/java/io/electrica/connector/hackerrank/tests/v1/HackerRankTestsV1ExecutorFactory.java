@@ -26,12 +26,11 @@ public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactor
     static final String KEEP_ALIVE_DURATION_MIN_PROPERTY = "http-client.keep-alive-duration-min";
     private static final int DEFAULT_MAX_IDLE_CONNECTIONS = 10;
     private static final int DEFAULT_KEEP_ALIVE_DURATION = 60;
-    private OkHttpClient httpClient;
-
-    private String testsUrlTemplate;
-
     private static final String DEFAULT_URL_TEMPLATE = "https://www.hackerrank.com/x/api/v1/tests";
-    private ObjectMapper mapper;
+
+    private final ObjectMapper mapper = new ObjectMapper();
+    private OkHttpClient httpClient;
+    private String testsUrlTemplate;
 
     @Override
     public String getErn() {
@@ -41,7 +40,6 @@ public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactor
     @Override
     public void setup(ConnectorProperties properties) throws IntegrationException {
         testsUrlTemplate = properties.getString(URL_TEMPLATE_PROPERTY, DEFAULT_URL_TEMPLATE);
-        this.mapper = new ObjectMapper();
 
         int maxIdleConnections = properties.getInteger(MAX_IDLE_CONNECTIONS_PROPERTY, DEFAULT_MAX_IDLE_CONNECTIONS);
         int keepAliveDuration = properties.getInteger(KEEP_ALIVE_DURATION_MIN_PROPERTY, DEFAULT_KEEP_ALIVE_DURATION);
