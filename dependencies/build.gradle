@@ -2,7 +2,8 @@ def versions = [
         'spi': "$spi",
         'it-test': "$itTest",
         'slack': "$slack",
-        'echo': "$echo"
+        'echo': "$echo",
+        'hackerrank': "$hackerrank"
 ]
 
 publishing {
