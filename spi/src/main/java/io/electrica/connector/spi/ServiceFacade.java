@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.TextNode;
-import io.electrica.connector.spi.context.Authorization;
-import io.electrica.connector.spi.context.BasicAuthorization;
-import io.electrica.connector.spi.context.ExecutionContext;
-import io.electrica.connector.spi.context.TokenAuthorization;
+import io.electrica.connector.spi.context.*;
 import io.electrica.connector.spi.exception.Exceptions;
 import io.electrica.connector.spi.exception.IntegrationException;
 import io.electrica.connector.spi.service.Logger;
@@ -22,6 +19,7 @@ public interface ServiceFacade {
     String REQUIRED_ACTION_ERROR_MESSAGE = "Action required";
     String REQUIRED_TOKEN_AUTHORIZATION_ERROR_MESSAGE = "Token authorization required";
     String REQUIRED_BASIC_AUTHORIZATION_ERROR_MESSAGE = "Basic authorization required";
+    String REQUIRED_IBM_AUTHORIZATION_ERROR_MESSAGE = "IBM authorization required";
 
     Logger getLogger();
 
@@ -69,4 +67,9 @@ public interface ServiceFacade {
         return (BasicAuthorization) authorization;
     }
 
+    default IbmAuthorization getIbmAuthorization() throws IntegrationException {
+        Authorization authorization = getContext().getAuthorization();
+        check(authorization instanceof IbmAuthorization, REQUIRED_IBM_AUTHORIZATION_ERROR_MESSAGE);
+        return (IbmAuthorization) authorization;
+    }
 }
