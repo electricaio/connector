@@ -1,0 +1,87 @@
+---
+swagger: "2.0"
+info:
+  description: Documentation for the API of HackerRank for Work V3 Candidates Object.
+  version: v1
+  title: HackerRank for Work Candidates Object
+
+definitions:
+  HackerRankV3CandidatesAction:
+    type: string
+    description: Possible actions for HackerRank for Work V1 Candidates connector.
+    enum:
+      - InviteCandidate
+
+  HackerRankV3TestCandidateInvite:
+    required:
+      - email
+    properties:
+      full_name:
+        type: string
+        description: Full name of the candidate
+      email:
+        type: string
+        description: Email address of the candidate
+      ats_state:
+        type: integer
+        description: This indicates the current state of the candidate application. Value can be from 0 to 22.
+      invite_metadata:
+        type: string
+        description: Customizable metadata that can be set for a candidate. This must be a valid JSON
+      subject:
+        type: string
+        description: Subject of the candidate invite mail.
+      message:
+        type: string
+        description: Custom message that will be prepended to the candidate invite mail body.
+      template:
+        type: string
+        description: ID of the template to be used for inviting candidate.
+      evaluator_mail:
+        type: array
+        description: Email address of the evaluator, if different from the test admins and owner
+        items:
+          type: string
+      test_finish_url:
+        type: string
+        description: Candidate will be redirected to this URL when the test gets over. By default, they are sent to the feedback page.
+      test_result_url:
+        type: string
+        description: Webhook URL for candidate report. When the report is processed the report data will be sent to this URL as a webhook. By default, the inviter will get the report by email
+      send_email:
+        type: boolean
+        description: Flag to send the invite email to the candidate.
+      tags:
+        type: array
+        description: List of tags associated with this candidate
+        items:
+          type: string
+      force:
+        type: boolean
+        description: Flag which forces sending an email even when the candidate has already been invited
+      force_reattempt:
+        type: boolean
+        description: Force re-invite even when the candidate has already attempted the test. If you need this, please contact support@hackerrank.com .
+
+  HackerRankV3TestInvitationResponse:
+    properties:
+      email:
+        type: string
+        description: Email address of the candidate
+      test_link:
+        type: string
+        description: The link to access the test
+      id:
+        type: string
+        description: The id of the invitation
+
+  HackerRankV3TestCandidatePayload:
+    properties:
+      test_id:
+        description: The ID of the test
+        required: true
+        type: integer
+      body:
+        description: The candidate invitation details
+        required: true
+        $ref: '#/definitions/HackerRankV3TestCandidateInvite'

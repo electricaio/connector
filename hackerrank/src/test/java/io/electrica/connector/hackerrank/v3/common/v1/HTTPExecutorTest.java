@@ -1,4 +1,4 @@
-package io.electrica.connector.hackerrank.tests.v1;
+package io.electrica.connector.hackerrank.v3.common.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.connector.spi.exception.IntegrationException;
@@ -13,18 +13,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class HTTPGetExecutorTest {
+class HTTPExecutorTest {
 
+
+    public static final String HTTP_POST = "POST";
+    private static final String JSON_BODY = "{\"hello\":\"world\"}";
     private static final String GOOD_RESPONSE = "{\"field\":\"ok\"}";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static String url;
     private static MockWebServer server;
 
-    private HTTPGetExecutor httpGetExecutor;
+    private HTTPExecutor httpExecutor;
     private String token = "123";
 
     @BeforeAll
@@ -43,13 +47,13 @@ class HTTPGetExecutorTest {
     void setUp() {
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .build();
-        httpGetExecutor = new HTTPGetExecutor(httpClient, new ObjectMapper(), url, token);
+        httpExecutor = new HTTPExecutor(httpClient, new ObjectMapper(), url, token);
     }
 
     @Test
     void authorizationTokenPassedInRequest() throws IntegrationException, InterruptedException {
         goodResponse();
-        httpGetExecutor.run(One.class);
+        httpExecutor.run(One.class);
         RecordedRequest recordedRequest = server.takeRequest();
         String authHeader = recordedRequest.getHeader(AUTHORIZATION_HEADER);
         assertEquals(authHeader, "Bearer " + token);
@@ -59,7 +63,7 @@ class HTTPGetExecutorTest {
     @Test
     void urlPassedInRequest() throws IntegrationException, InterruptedException {
         goodResponse();
-        httpGetExecutor.run(One.class);
+        httpExecutor.run(One.class);
         RecordedRequest recordedRequest = server.takeRequest();
         String path = recordedRequest.getRequestUrl().toString();
         assertEquals(path, url);
@@ -68,7 +72,7 @@ class HTTPGetExecutorTest {
     @Test
     void unsuccessfulResponseThrowsAnError() {
         badResponse();
-        assertThrows(IntegrationException.class, () -> httpGetExecutor.run(One.class));
+        assertThrows(IntegrationException.class, () -> httpExecutor.run(One.class));
     }
 
     @Test
@@ -76,10 +80,26 @@ class HTTPGetExecutorTest {
         MockResponse mockedResponse = new MockResponse();
         mockedResponse.setBody(GOOD_RESPONSE);
         server.enqueue(mockedResponse);
-        One result = httpGetExecutor.run(One.class);
+        One result = httpExecutor.run(One.class);
         assertEquals(new One("ok"), result);
     }
 
+
+    @Test
+    void postMethodIsCalled() throws IntegrationException, InterruptedException {
+        goodResponse();
+        httpExecutor.buildPost(JSON_BODY).run(One.class);
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals(recordedRequest.getMethod(), HTTP_POST);
+    }
+
+    @Test
+    void jsonBodyPassedInPost() throws IntegrationException, InterruptedException {
+        goodResponse();
+        httpExecutor.buildPost(JSON_BODY).run(One.class);
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals(recordedRequest.getBody().readString(Charset.defaultCharset()), JSON_BODY);
+    }
 
     private void goodResponse() {
         MockResponse mockedResponse = new MockResponse();

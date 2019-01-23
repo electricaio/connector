@@ -1,24 +1,26 @@
-package io.electrica.connector.hackerrank.tests.v1;
+package io.electrica.connector.hackerrank.v3.common.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.connector.spi.exception.Exceptions;
 import io.electrica.connector.spi.exception.IntegrationException;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 
 import java.io.IOException;
 
-class HTTPGetExecutor {
+public class HTTPExecutor {
+
+    private static final MediaType APPLICATION_JSON = MediaType.parse("application/json; charset=utf-8");
 
     private final OkHttpClient httpClient;
 
     private final String url;
     private final String token;
     private final ObjectMapper mapper;
+    private String method;
+    private RequestBody jsonBody;
 
-    HTTPGetExecutor(
+
+    public HTTPExecutor(
             OkHttpClient httpClient,
             ObjectMapper mapper,
             String url,
@@ -28,14 +30,26 @@ class HTTPGetExecutor {
         this.mapper = mapper;
         this.token = token;
         this.url = url;
+        this.method = "GET";
+        this.jsonBody = null;
     }
 
-    <R> R run(Class<R> resultType) throws IntegrationException {
+    public HTTPExecutor buildPost(String jsonBody) {
+        this.method = "POST";
+        this.jsonBody = RequestBody.create(APPLICATION_JSON, jsonBody);
+        return this;
+    }
+
+
+    public <R> R run(Class<R> resultType) throws IntegrationException {
+
+
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + this.token)
-                .get()
+                .method(this.method, this.jsonBody)
                 .build();
+
 
         ResponseBody body;
         try {
