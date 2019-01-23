@@ -142,7 +142,18 @@ definitions:
       enable_acknowledgement:
         type: boolean
         description: If set to false, then candidate will not be asked to agree to acknowledgement text.
-    title: Tests
+      start_time:
+        type: string
+        description: 'If set, then logins before this time will be disabled. Candidates already logged in will not be affected.'
+        default: '2019-01-14T18:45:40+0000'
+      end_time:
+        type: string
+        description: 'If set, then logins after this time will be disabled. Candidates who are already logged in will be able to give the test normally even after endtime.'
+        default: '2019-01-21T18:45:40+0000'
+      created_at:
+        type: string
+        description: Timestamp when this test was created
+        default: '2019-01-14T18:45:40+0000'
 
   HackerRankV3TestsIndex:
     properties:
@@ -273,7 +284,18 @@ definitions:
       enable_acknowledgement:
         type: boolean
         description: If set to false, then candidate will not be asked to agree to acknowledgement text.
-    title: Tests
+      start_time:
+        type: string
+        description: 'If set, then logins before this time will be disabled. Candidates already logged in will not be affected.'
+        default: '2019-01-14T18:45:40+0000'
+      end_time:
+        type: string
+        description: 'If set, then logins after this time will be disabled. Candidates who are already logged in will be able to give the test normally even after endtime.'
+        default: '2019-01-21T18:45:40+0000'
+      created_at:
+        type: string
+        description: Timestamp when this test was created
+        default: '2019-01-14T18:45:40+0000'
 
   HackerRankV3TestsIndexResponse:
     properties:

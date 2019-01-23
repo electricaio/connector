@@ -26,7 +26,7 @@ public class HackerRankTestsV1ExecutorFactory implements ConnectorExecutorFactor
     static final String KEEP_ALIVE_DURATION_MIN_PROPERTY = "http-client.keep-alive-duration-min";
     private static final int DEFAULT_MAX_IDLE_CONNECTIONS = 10;
     private static final int DEFAULT_KEEP_ALIVE_DURATION = 60;
-    private static final String DEFAULT_URL_TEMPLATE = "https://www.hackerrank.com/x/api/v1/tests";
+    private static final String DEFAULT_URL_TEMPLATE = "https://www.hackerrank.com/x/api/v3/tests";
 
     private final ObjectMapper mapper = new ObjectMapper();
     private OkHttpClient httpClient;
