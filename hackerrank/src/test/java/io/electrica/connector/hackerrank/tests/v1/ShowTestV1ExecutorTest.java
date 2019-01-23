@@ -41,15 +41,12 @@ class ShowTestV1ExecutorTest {
     }
 
     @Test
-    void errorThrownForUnknownTest() throws IntegrationException {
+    void errorThrownForUnknownTest() {
         InvocationContext context = InvocationContext.builder(HackerRankV3TestsAction.TESTSSHOW)
                 .authorization(SecuredAuthorizations.token(HR_ACCESS_TOKEN))
                 .payload(new HackerRankV3TestsShowPayload().id(-1))
                 .build();
 
-        assertThrows(IntegrationException.class, () -> {
-            emulator.runIntegration(context);
-        });
-
+        assertThrows(IntegrationException.class, () -> emulator.runIntegration(context));
     }
 }

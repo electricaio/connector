@@ -1,17 +1,16 @@
 package io.electrica.connector.hackerrank.tests.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.exception.Exceptions;
 import io.electrica.connector.spi.exception.IntegrationException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 
-public class HTTPGetExecutor implements ConnectorExecutor {
+class HTTPGetExecutor {
 
     private final OkHttpClient httpClient;
 
@@ -19,7 +18,7 @@ public class HTTPGetExecutor implements ConnectorExecutor {
     private final String token;
     private final ObjectMapper mapper;
 
-    public HTTPGetExecutor(
+    HTTPGetExecutor(
             OkHttpClient httpClient,
             ObjectMapper mapper,
             String url,
@@ -31,25 +30,33 @@ public class HTTPGetExecutor implements ConnectorExecutor {
         this.url = url;
     }
 
-    @Nullable
-    @Override
-    public Object run() throws IntegrationException {
+    <R> R run(Class<R> resultType) throws IntegrationException {
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + this.token)
                 .get()
                 .build();
 
-
+        ResponseBody body;
         try {
             Response response = httpClient.newCall(request).execute();
+            body = response.body();
             if (!response.isSuccessful()) {
-                throw Exceptions.generic(response.body().string());
+                String message = response.toString() + "\n" + (body == null ? "" : body.toString());
+                throw Exceptions.generic(message);
             }
-
-            return mapper.valueToTree(response.body().string());
         } catch (IOException e) {
             throw Exceptions.io("Network error", e);
+        }
+
+        if (body == null) {
+            throw Exceptions.generic("Empty response body");
+        }
+
+        try {
+            return mapper.readValue(body.charStream(), resultType);
+        } catch (IOException e) {
+            throw Exceptions.deserialization("Can't deserialize response", e);
         }
     }
 }

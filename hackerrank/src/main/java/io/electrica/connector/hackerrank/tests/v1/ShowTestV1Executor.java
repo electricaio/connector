@@ -2,6 +2,7 @@ package io.electrica.connector.hackerrank.tests.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.electrica.connector.hackerrank.tests.v1.model.HackerRankV3TestsShowPayload;
+import io.electrica.connector.hackerrank.tests.v1.model.HackerRankV3TestsShowResponse;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ServiceFacade;
 import io.electrica.connector.spi.exception.IntegrationException;
@@ -15,7 +16,7 @@ public class ShowTestV1Executor implements ConnectorExecutor {
     private final String url;
     private final ObjectMapper mapper;
 
-    public ShowTestV1Executor(ServiceFacade facade, OkHttpClient httpClient, ObjectMapper mapper, String url) {
+    ShowTestV1Executor(ServiceFacade facade, OkHttpClient httpClient, ObjectMapper mapper, String url) {
         this.facade = facade;
         this.httpClient = httpClient;
         this.mapper = mapper;
@@ -27,6 +28,7 @@ public class ShowTestV1Executor implements ConnectorExecutor {
     public Object run() throws IntegrationException {
         String token = facade.getTokenAuthorization().getToken();
         HackerRankV3TestsShowPayload idPayload = facade.readPayload(HackerRankV3TestsShowPayload.class);
-        return new HTTPGetExecutor(httpClient, mapper, this.url + "/" + idPayload.getId(), token).run();
+        return new HTTPGetExecutor(httpClient, mapper, this.url + "/" + idPayload.getId(), token)
+                .run(HackerRankV3TestsShowResponse.class);
     }
 }
