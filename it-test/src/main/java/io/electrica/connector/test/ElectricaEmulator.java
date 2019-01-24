@@ -4,6 +4,7 @@ import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ConnectorExecutorFactory;
 import io.electrica.connector.spi.ConnectorProperties;
 import io.electrica.connector.spi.exception.IntegrationException;
+import io.electrica.connector.spi.impl.MapConnectorProperties;
 import lombok.SneakyThrows;
 
 import static java.util.Objects.requireNonNull;
@@ -83,7 +84,7 @@ public class ElectricaEmulator implements AutoCloseable {
 
         private final Class<? extends ConnectorExecutorFactory> executorFactoryClass;
 
-        private ConnectorProperties connectorProperties = MapConnectorProperties.EMPTY;
+        private ConnectorProperties connectorProperties = ConnectorProperties.EMPTY;
 
         private Builder(Class<? extends ConnectorExecutorFactory> executorFactoryClass) {
             this.executorFactoryClass = executorFactoryClass;
@@ -93,7 +94,7 @@ public class ElectricaEmulator implements AutoCloseable {
          * Specify {@link ConnectorProperties} object to pass to
          * {@link ConnectorExecutorFactory#setup(ConnectorProperties)} executor factory method.
          * <p>
-         * By default {@link MapConnectorProperties#EMPTY} will used.
+         * By default {@link ConnectorProperties#EMPTY} will used.
          *
          * @see MapConnectorProperties
          */

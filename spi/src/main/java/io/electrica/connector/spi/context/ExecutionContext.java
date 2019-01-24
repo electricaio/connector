@@ -1,6 +1,7 @@
 package io.electrica.connector.spi.context;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.electrica.connector.spi.ObjectProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,6 +17,8 @@ public class ExecutionContext {
     private final UUID instanceId;
 
     private final String connectionName;
+
+    private final ObjectProperties connectionProperties;
 
     @Nullable
     private final Authorization authorization;

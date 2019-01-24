@@ -3,7 +3,8 @@ def versions = [
         'it-test': "$itTest",
         'slack': "$slack",
         'echo': "$echo",
-        'hackerrank': "$hackerrank"
+        'hackerrank': "$hackerrank",
+        'brassring': "$brassring"
 ]
 
 publishing {

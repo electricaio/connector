@@ -2,8 +2,10 @@ package io.electrica.connector.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import io.electrica.connector.spi.ObjectProperties;
 import io.electrica.connector.spi.ServiceFacade;
 import io.electrica.connector.spi.context.ExecutionContext;
+import io.electrica.connector.spi.impl.MapObjectProperties;
 import io.electrica.connector.spi.service.Logger;
 import io.electrica.connector.test.security.SecuredAuthorization;
 import io.electrica.connector.test.security.SecuredAuthorizations;
@@ -70,6 +72,7 @@ public class InvocationContext implements ServiceFacade {
         private UUID invocationId = UUID.randomUUID();
         private UUID instanceId = UUID.randomUUID();
         private String connectionName = DEFAULT_CONNECTION_NAME;
+        private ObjectProperties connectionProperties = ObjectProperties.EMPTY;
         private SecuredAuthorization authorization;
         private Object parameters;
         private Object payload;
@@ -119,6 +122,18 @@ public class InvocationContext implements ServiceFacade {
         }
 
         /**
+         * Specify {@link ObjectProperties} object for {@link ExecutionContext#getConnectionProperties()} field.
+         * <p>
+         * By default {@link ObjectProperties#EMPTY} will used.
+         *
+         * @see MapObjectProperties
+         */
+        public Builder connectionProperties(ObjectProperties connectionProperties) {
+            this.connectionProperties = connectionProperties;
+            return this;
+        }
+
+        /**
          * Set secured authorization created by {@link SecuredAuthorizations}.
          * <p>
          * By default is {@code null}.
@@ -153,6 +168,7 @@ public class InvocationContext implements ServiceFacade {
                     invocationId,
                     instanceId,
                     connectionName,
+                    connectionProperties,
                     authorization == null ? null : authorization.toSimple(),
                     action,
                     objectMapper.valueToTree(parameters),

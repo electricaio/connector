@@ -1,25 +1,22 @@
-package io.electrica.connector.test;
+package io.electrica.connector.spi.impl;
 
-import io.electrica.connector.spi.ConnectorProperties;
+import io.electrica.connector.spi.ObjectProperties;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- * Implementation of {@link ConnectorProperties} interface based on {@code Map<String, String>}.
+ * Implementation of {@link ObjectProperties} interface based on {@code Map<String, String>}.
  *
  * @see Builder
  */
-public class MapConnectorProperties implements ConnectorProperties {
-
-    public static final ConnectorProperties EMPTY = new MapConnectorProperties(Collections.emptyMap());
+public class MapObjectProperties implements ObjectProperties {
 
     private final Map<String, String> properties;
 
-    public MapConnectorProperties(Map<String, String> properties) {
+    public MapObjectProperties(Map<String, String> properties) {
         this.properties = Objects.requireNonNull(properties, "properties map");
     }
 
@@ -72,8 +69,8 @@ public class MapConnectorProperties implements ConnectorProperties {
             return this;
         }
 
-        public MapConnectorProperties build() {
-            return new MapConnectorProperties(properties);
+        public MapObjectProperties build() {
+            return new MapObjectProperties(properties);
         }
     }
 }
