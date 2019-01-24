@@ -1,7 +1,7 @@
-package io.electrica.connector.hackerrank.tests.v1;
+package io.electrica.connector.hackerrank.v3.tests.v1;
 
-import io.electrica.connector.hackerrank.tests.v1.model.HackerRankV3TestsAction;
-import io.electrica.connector.hackerrank.tests.v1.model.LimitOffset;
+import io.electrica.connector.hackerrank.v3.tests.v1.model.HackerRankV3TestsAction;
+import io.electrica.connector.hackerrank.v3.tests.v1.model.HackerRankV3TestsShowPayload;
 import io.electrica.connector.spi.exception.ExceptionCodes;
 import io.electrica.connector.spi.exception.IntegrationException;
 import io.electrica.connector.test.ElectricaEmulator;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TestsIndexV1ExecutorTest {
+class ShowTestV1ExecutorTest {
 
     private static final String HR_ACCESS_TOKEN = "eSJfx9rxQeC7OO5cdpjkEglihlt2d+0VeBC/7ymKLMl7UC0ypUZpUS" +
             "cQpefLbCHkMWWMeE+pUUJiIAvUTrZpdKE6Q3550FtUoVzAyZL0ELOWo09Wm/6TcIgMI8Ea3NVwVs/AI01fgRctKCm/w6+QbGY8BHIM" +
@@ -30,13 +30,23 @@ class TestsIndexV1ExecutorTest {
     }
 
     @Test
-    void returnsAllActiveTests() throws IntegrationException {
-        InvocationContext context = InvocationContext.builder(HackerRankV3TestsAction.TESTSINDEX)
+    void individualTestIsReturnedTest() throws IntegrationException {
+        InvocationContext context = InvocationContext.builder(HackerRankV3TestsAction.TESTSSHOW)
                 .authorization(SecuredAuthorizations.token(HR_ACCESS_TOKEN))
-                .payload(new LimitOffset().limit(10).offset(0))
+                .payload(new HackerRankV3TestsShowPayload().id(359653))
                 .build();
 
         Object result = emulator.runIntegration(context);
         assertNotNull(result);
+    }
+
+    @Test
+    void errorThrownForUnknownTest() {
+        InvocationContext context = InvocationContext.builder(HackerRankV3TestsAction.TESTSSHOW)
+                .authorization(SecuredAuthorizations.token(HR_ACCESS_TOKEN))
+                .payload(new HackerRankV3TestsShowPayload().id(-1))
+                .build();
+
+        assertThrows(IntegrationException.class, () -> emulator.runIntegration(context));
     }
 }

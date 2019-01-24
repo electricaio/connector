@@ -1,8 +1,9 @@
-package io.electrica.connector.hackerrank.tests.v1;
+package io.electrica.connector.hackerrank.v3.tests.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.electrica.connector.hackerrank.tests.v1.model.HackerRankV3TestsIndexResponse;
-import io.electrica.connector.hackerrank.tests.v1.model.LimitOffset;
+import io.electrica.connector.hackerrank.v3.common.v1.HTTPExecutor;
+import io.electrica.connector.hackerrank.v3.tests.v1.model.HackerRankV3TestsIndexResponse;
+import io.electrica.connector.hackerrank.v3.tests.v1.model.LimitOffset;
 import io.electrica.connector.spi.ConnectorExecutor;
 import io.electrica.connector.spi.ServiceFacade;
 import io.electrica.connector.spi.exception.IntegrationException;
@@ -36,7 +37,7 @@ public class TestsIndexV1Executor implements ConnectorExecutor {
     @Nullable
     @Override
     public Object run() throws IntegrationException {
-        return new HTTPGetExecutor(httpClient, mapper, url, token)
+        return new HTTPExecutor(httpClient, mapper, url, token)
                 .run(HackerRankV3TestsIndexResponse.class);
     }
 }
