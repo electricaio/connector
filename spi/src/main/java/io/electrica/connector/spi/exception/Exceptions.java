@@ -26,7 +26,23 @@ public class Exceptions {
                 .build();
     }
 
-    public static IntegrationException deserialization(String message, Throwable throwable) {
+    public static IntegrationException serialization(String message) {
+        return serialization(message, null);
+    }
+
+    public static IntegrationException serialization(String message, @Nullable Throwable throwable) {
+        return custom()
+                .code(ExceptionCodes.SERIALIZATION)
+                .message(message)
+                .throwable(throwable)
+                .build();
+    }
+
+    public static IntegrationException deserialization(String message) {
+        return deserialization(message, null);
+    }
+
+    public static IntegrationException deserialization(String message, @Nullable Throwable throwable) {
         return custom()
                 .code(ExceptionCodes.DESERIALIZATION)
                 .message(message)

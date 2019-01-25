@@ -1,0 +1,131 @@
+swagger: 3.1
+info:
+  title: Brassring Application
+  description: Brassring Application models documentation
+  version: v1
+
+definitions:
+  BrassRingApplicationAction:
+    type: string
+    description: Possible actions for BrassRing Application connector.
+    enum:
+      - Update
+
+  BrassRingApplicationPayload:
+    properties:
+      formTypeId:
+        type: integer
+        required: true
+        description: Attribute is required and is used to determine the form where the results/form data would reside.
+      formName:
+        type: string
+        maxLenght: 255
+        required: true
+        description: Required name of the form.
+      action:
+        type: string
+        required: false
+        description: |
+          There are 3 possible values for the `action` attribute. `Insert` will create a new form, `update` will delete
+          the existing form and create a new instance of the form with the data that is sent in the XML and
+          `UpdateIndividual` action will update the existing form with only the fields that is sent in the XML (if no
+          existing is present then it will create a new form).
+        enum:
+          - Insert
+          - update
+          - UpdateIndividual
+        default: UpdateIndividual
+      language:
+        type: string
+        maxLenght: 2
+        required: false
+        description: 2 letter ISO code value should be passed (i.e. EN, FR, etc.).
+
+      resumeKey:
+        type: integer
+        format: int64
+        required: false
+        description: |
+          If this value is passed then no other candidate information is required like the `firstName`, `lastName`,
+          `email` and `homePhone` is not necessary.
+      autoreq:
+        type: string
+        maxLenght: 15
+        required: false
+        description: |
+          If the Candidate form in BrassRing where the results are being sent is a “per Req” form, then the Req number
+          must be sent as well. The Req number is sent in the `autoreq` attribute (i.e. 100BR, 23443BR).
+      firstName:
+        type: string
+        maxLenght: 100
+        required: false
+        description: |
+          If `resumeKey` value is not available, then this value must be sent. The API utilizes these values to
+          determine an existing candidate in the system.
+      lastName:
+        type: string
+        maxLenght: 100
+        required: false
+        description: |
+          If `resumeKey` value is not available, then this value must be sent. The API utilizes these values to
+          determine an existing candidate in the system.
+      email:
+        type: string
+        maxLenght: 200
+        required: false
+        description: |
+          If `resumeKey` value is not available, then this or `homePhone` value must be sent. The API utilizes these
+          values to determine an existing candidate in the system.
+      homePhone:
+        type: string
+        maxLenght: 25
+        required: false
+        description: |
+          If `resumeKey` value is not available, then this or `email` value must be sent. The API utilizes these values
+          to determine an existing candidate in the system.
+      formId:
+        type: integer
+        format: int64
+        required: false
+        description: |
+          It is the Form identifier for the Candidate form if the form already exists in the system. If `formId` value
+          is passed then none of the [`resumeKey`, `autoreq`, `firstName`, `lastName`, `email`, `homePhone`, `brUID`,
+          `orderID`] attributes are required to be sent since the `formId` value knows exactly what BrassRing form it
+          must update.
+      brUID:
+        type: integer
+        format: int64
+        required: false
+        description: |
+          It is an internal representation of the Candidate ID in BrassRing. It is unlikely that an external system
+          would be able to reference this value.
+      orderID:
+        type: integer
+        format: int64
+        required: false
+        description: It is the assessment Order ID used mainly for assessments like SHL.
+
+      fields:
+        type: array
+        required: true
+        description: Mandatory list of changed fields.
+        items:
+          $ref: '#/definitions/FormInput'
+
+  FormInput:
+    description: Determine the form field.
+    properties:
+      id:
+        type: integer
+        required: true
+        description: Attribute is required and is used to determine the field where a particular data would reside.
+      name:
+        type: string
+        maxLenght: 255
+        required: true
+        description: Attribute is required and is used to determine the title of field where a particular data would reside.
+      value:
+        type: string
+        maxLenght: 255
+        required: false
+        description: Determine the value of specified field.

@@ -1,7 +1,7 @@
 package io.electrica.connector.slack.channel.v1;
 
+import io.electrica.connector.spi.impl.MapConnectorProperties;
 import io.electrica.connector.test.ElectricaEmulator;
-import io.electrica.connector.test.MapConnectorProperties;
 import org.junit.jupiter.api.BeforeAll;
 
 public abstract class SlackChannelV1BaseTest {
