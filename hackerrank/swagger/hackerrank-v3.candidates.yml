@@ -20,6 +20,7 @@ definitions:
         type: string
         description: Full name of the candidate
       email:
+        required: true
         type: string
         description: Email address of the candidate
       ats_state:
