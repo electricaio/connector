@@ -11,17 +11,14 @@ import io.electrica.connector.test.InvocationContext;
 import io.electrica.connector.test.security.SecuredAuthorizations;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.UUID;
 
+import static io.electrica.connector.hackerrank.v3.TestConstants.HR_ACCESS_TOKEN;
+import static io.electrica.connector.hackerrank.v3.TestConstants.TEST_ID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CandidateTestInviteV1ExecutorTest {
 
-    private static final String HR_ACCESS_TOKEN = "eSJfx9rxQeC7OO5cdpjkEglihlt2d+0VeBC/7ymKLMl7UC0ypUZpUS" +
-            "cQpefLbCHkMWWMeE+pUUJiIAvUTrZpdKE6Q3550FtUoVzAyZL0ELOWo09Wm/6TcIgMI8Ea3NVwVs/AI01fgRctKCm/w6+QbGY8BHIM" +
-            "O3a38aDasClpBzFNwNYjgey914a0mLNKtJut23kMu9X8Yhy3hEiOp+uSFo3ygXSvAjEKUWlhY8lqnNRvzXjyf8Fc4mMO0Yn8" +
-            "9AWUTK0AUYiBG8A6gBMrnMHgDAMC/5IpRl0p55OQ/jjftLVPah2kJesKMdB0vxKOEtm7sBsfgujpV/TVuos4AGeOrw==";
     private ElectricaEmulator emulator = ElectricaEmulator.of(HackerRankCandidatesV1ExecutorFactory.class);
 
     @Test
@@ -34,13 +31,13 @@ class CandidateTestInviteV1ExecutorTest {
     }
 
     @Test
-    void invitesACandidateToTest() throws IntegrationException, IOException {
+    void invitesACandidateToTest() throws IntegrationException {
         HackerRankV3TestCandidateInvite candidateInvite = new HackerRankV3TestCandidateInvite();
         String email = UUID.randomUUID() + "test@electrica.io";
         candidateInvite.email(email).fullName("Electrica Test");
         InvocationContext context = InvocationContext.builder(HackerRankV3CandidatesAction.INVITECANDIDATE)
                 .authorization(SecuredAuthorizations.token(HR_ACCESS_TOKEN))
-                .payload(new HackerRankV3TestCandidatePayload().testId(363094).body(candidateInvite))
+                .payload(new HackerRankV3TestCandidatePayload().testId(TEST_ID).body(candidateInvite))
                 .build();
 
         HackerRankV3TestInvitationResponse response = (HackerRankV3TestInvitationResponse) emulator
@@ -49,4 +46,5 @@ class CandidateTestInviteV1ExecutorTest {
         assertNotNull(response.getTestLink());
         assertNotNull(response.getId());
     }
+
 }
