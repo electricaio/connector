@@ -25,7 +25,7 @@ public class Packet {
 
     @Getter
     @Setter
-    private static class PacketInfo {
+    public static class PacketInfo {
 
         @JacksonXmlProperty(isAttribute = true, localName = "packetType")
         private String packetType = "data";
@@ -42,7 +42,7 @@ public class Packet {
         @JacksonXmlProperty(localName = "Status")
         private Status status;
 
-        private static PacketInfo of(String manifest) {
+        public static PacketInfo of(String manifest) {
             PacketInfo r = new PacketInfo();
             r.setManifest(manifest);
             return r;

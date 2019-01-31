@@ -1,5 +1,6 @@
 package io.electrica.connector.brassring.application.v1.model;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import io.electrica.connector.spi.context.IbmAuthorization;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -29,14 +32,15 @@ public class Envelope {
     private TransactInfo transactInfo;
 
     @JacksonXmlProperty(localName = "Packet")
-    private Packet packet;
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<Packet> packets;
 
     public static Envelope of(String manifest, IbmAuthorization authorization, String formPayload) {
         Envelope r = new Envelope();
         r.setSender(new Sender(authorization.getIntegrationId(), authorization.getClientId()));
         r.setRecipient(new Recipient());
         r.setTransactInfo(new TransactInfo());
-        r.setPacket(Packet.of(manifest, formPayload));
+        r.setPackets(Collections.singletonList(Packet.of(manifest, formPayload)));
         return r;
     }
 
@@ -44,7 +48,7 @@ public class Envelope {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class Sender {
+    public static class Sender {
 
         @JacksonXmlProperty(localName = "Id")
         private String id;
@@ -55,7 +59,7 @@ public class Envelope {
 
     @Getter
     @Setter
-    private static class Recipient {
+    public static class Recipient {
 
         @JacksonXmlProperty(localName = "Id")
         private String id;
