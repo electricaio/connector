@@ -112,7 +112,7 @@ public class Form {
 
     @Getter
     @Setter
-    private static class Input {
+    public static class Input {
 
         @JacksonXmlProperty(isAttribute = true, localName = "name")
         private String name = "";
