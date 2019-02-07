@@ -1,5 +1,3 @@
-version = "$spi"
-
 dependencies {
     compile "com.google.guava:guava:$guava"
 }
