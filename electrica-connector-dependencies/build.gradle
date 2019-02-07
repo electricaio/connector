@@ -1,0 +1,9 @@
+dependencies {
+    // define connector dependencies automatically
+    for (Object project : rootProject.subprojects) {
+        def projectName = project.name
+        if (!projectName.endsWith('dependencies') && !projectName.endsWith('it-test')){
+            dependencies.add("compile", dependencies.project(path: ":$projectName"))
+        }
+    }
+}

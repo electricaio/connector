@@ -6,7 +6,7 @@ This module provide following capabilities:
 ## Usage
 - First of all add following dependency to your integration module:
 ```groovy
-testCompile project(':it-test')
+testCompile project(':electrica-connector-it-test')
 ```
 - Create test class for your implementation of `ConnectorExecutorFactory` (e.q `ChannelV2ExecutorFactoryTest`)
 - invoke emulator and check result

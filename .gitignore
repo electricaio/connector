@@ -24,6 +24,3 @@ build/
 /dist/
 /nbdist/
 /.nb-gradle/
-
-### Private key for running tests ###
-private.der

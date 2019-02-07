@@ -1,7 +1,5 @@
-version = "$itTest"
-
 dependencies {
-    compile project(':spi')
+    compile project(':electrica-connector-spi')
     compile "org.apache.commons:commons-io:$commonsIo"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind"
 

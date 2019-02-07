@@ -23,19 +23,11 @@ allprojects {
     targetCompatibility = 1.8
 
     group = 'io.electrica.connector'
-    version = '0.0.1'
+    version = '0.0.1-SNAPSHOT'
 }
 
 subprojects {
     ext {
-        spi = '0.0.1'
-        itTest = '0.0.1'
-
-        slack = '0.0.1'
-        echo = '0.0.1'
-        hackerrank = '0.0.1'
-        brassring = '0.0.1'
-
         lombok = '1.18.4'
         mockito = '2.23.0'
         jupiter = '5.3.2'
@@ -51,8 +43,7 @@ subprojects {
     }
 
     def moduleName = it.name
-    def moduleDescription = it.description == null ? moduleName : it.description
-    if (moduleName != 'dependencies') {
+    if (moduleName != 'electrica-connector-dependencies') {
 
         // Setup Lombok, test libraries and JUnit5 implementation for all modules
         dependencies {
@@ -76,7 +67,7 @@ subprojects {
         }
 
         // Setup Swagger code generator, Swagger files upload and required dependencies for connector modules
-        if (moduleName != 'spi' && moduleName != 'it-test') {
+        if (moduleName != 'electrica-connector-spi' && moduleName != 'electrica-connector-it-test') {
             apply plugin: 'org.hidetake.swagger.generator'
             apply plugin: 'jp.classmethod.aws.s3'
 
@@ -84,10 +75,10 @@ subprojects {
                 compileOnly "com.google.auto.service:auto-service:$autoService"
                 annotationProcessor "com.google.auto.service:auto-service:$autoService"
 
-                compile project(':spi')
+                compile project(':electrica-connector-spi')
                 compileOnly "io.swagger:swagger-annotations:$swaggerAnnotations"
 
-                testCompile project(':it-test')
+                testCompile project(':electrica-connector-it-test')
 
                 swaggerCodegen "io.swagger:swagger-codegen-cli:$swaggerCodegenCli"
             }
@@ -186,47 +177,6 @@ subprojects {
 
         }
 
-        task sourceJar(type: Jar) {
-            classifier 'sources'
-            from sourceSets.main.allJava
-        }
-
-        publishing {
-            repositories {
-                maven {
-                    url System.env.AWS_S3_MAVEN_REPO_URL
-                    credentials(AwsCredentials) {
-                        accessKey System.env.AWS_ACCESS_KEY_ID
-                        secretKey System.env.AWS_SECRET_ACCESS_KEY
-                    }
-                }
-            }
-            publications {
-                maven(MavenPublication) {
-                    from components.java
-                    afterEvaluate {
-                        artifactId = jar.baseName
-                    }
-                    pom {
-                        name = moduleName + ' Connectors'
-                        description = moduleDescription
-//                    url = 'http://www.example.com/library'
-                        licenses {
-                            license {
-                                name = 'GNU General Public License, Version 3'
-                                url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
-                            }
-                        }
-                        scm {
-                            url = 'https://github.com/electricaio/connector'
-                            connection = 'scm:git:https://github.com/electricaio/connector.git'
-                        }
-                    }
-                    artifact tasks.sourceJar
-                }
-            }
-        }
-
         jacocoTestReport {
             reports {
                 xml.enabled = true // coveralls plugin depends on xml format report
@@ -271,6 +221,45 @@ subprojects {
         }
 
     } // not `dependencies` module
+
+    task sourceJar(type: Jar) {
+        classifier 'sources'
+        from sourceSets.main.allJava
+    }
+
+    publishing {
+        repositories {
+            maven {
+                url System.env.AWS_S3_MAVEN_REPO_URL
+                credentials(AwsCredentials) {
+                    accessKey System.env.AWS_ACCESS_KEY_ID
+                    secretKey System.env.AWS_SECRET_ACCESS_KEY
+                }
+            }
+        }
+        publications {
+            maven(MavenPublication) {
+                from components.java
+                afterEvaluate {
+                    artifactId = jar.baseName
+                }
+                pom {
+                    licenses {
+                        license {
+                            name = 'GNU General Public License, Version 3'
+                            url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                        }
+                    }
+                    scm {
+                        url = 'https://github.com/electricaio/connector'
+                        connection = 'scm:git:https://github.com/electricaio/connector.git'
+                    }
+                }
+                artifact tasks.sourceJar
+            }
+        }
+    }
+    
 } // subprojects
 
 def projects = subprojects
