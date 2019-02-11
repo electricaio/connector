@@ -129,7 +129,7 @@ subprojects {
                     task "uploadSwaggerFile$configurationName"(type: AmazonS3FileUploadTask) {
                         file swaggerFile
                         bucketName System.env.AWS_S3_CONNECTOR_ARTIFACT_BUCKET_NAME
-                        key "$moduleName/swagger/$fileName"
+                        key System.env.ARTIFACTS_TAG + "/$moduleName/swagger/$fileName"
                     }
                 }
             }
@@ -144,7 +144,7 @@ subprojects {
                         task "uploadSwaggerDoc_$fileName"(type: AmazonS3FileUploadTask) {
                             file details.file
                             bucketName System.env.AWS_S3_CONNECTOR_ARTIFACT_BUCKET_NAME
-                            key "$moduleName/doc/$fileName"
+                            key System.env.ARTIFACTS_TAG + "/$moduleName/doc/$fileName"
                         }
                     }
                 }
